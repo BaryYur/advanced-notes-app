@@ -1,0 +1,19 @@
+{
+  "name": "advanced-notes-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monorepo for Advanced Notes App (NestJS + React)",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run start:dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "start": "npm run start -w backend",
+    "format": "npm run format -w backend && npm run format -w frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

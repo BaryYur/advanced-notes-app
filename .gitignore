@@ -1,0 +1,104 @@
+# ============================================
+# 🧩 General
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.idea
+
+# ============================================
+# ⚙️ Build outputs
+# ============================================
+dist/
+build/
+.tmp/
+temp/
+coverage/
+
+# ============================================
+# ⚛️ Frontend (Vite / React)
+# ============================================
+frontend/node_modules
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.env.development
+frontend/.env.test
+
+# Cache
+frontend/.cache/
+frontend/vite.config.ts.timestamp*
+
+# ============================================
+# 🧱 Backend (NestJS)
+# ============================================
+backend/node_modules
+backend/dist/
+backend/.env
+backend/.env.local
+backend/.env.prod
+backend/.env.development
+backend/.env.production
+backend/.env.test
+backend/logs/
+backend/*.log
+
+# Prisma
+backend/prisma/*.db
+backend/prisma/*.sqlite
+backend/prisma/migrations/
+
+# ============================================
+# ⚙️ TypeScript
+# ============================================
+*.tsbuildinfo
+
+# ============================================
+# 🧱 IDE / OS
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VSCode / JetBrains
+.vscode/
+.idea/
+
+# ============================================
+# 🐳 Docker
+# ============================================
+.dockerignore
+docker-compose.override.yml
+docker-compose.local.yml
+**/Dockerfile.local
+**/.env.docker
+
+# ============================================
+# 🧰 Miscellaneous
+# ============================================
+*.log
+*.pem
+*.key
+*.crt
+*.pfx
+*.sqlite
+*.db
+*.sqlite3
+
+# ============================================
+# 📦 Monorepo tooling
+# ============================================
+.turbo/
+.turbo-cache/
+.cache/

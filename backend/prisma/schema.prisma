@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserAuthType {
+  email
+  google
+}
+
+enum TaskListType {
+  home
+  today
+  completed
+  default
+}
+
+model User {
+  id                         String       @id @default(uuid())
+  firstName                  String
+  lastName                   String
+  authType                   UserAuthType
+  email                      String
+  password                   String
+  passwordResetCode          Float?
+  passwordResetCodeExpiresAt DateTime?
+  refreshToken               String?
+  taskLists                  TaskList[]   @relation("UserToTaskList")
+
+  @@map("user")
+}
+
+model TaskList {
+  id           String   @id @default(uuid())
+  name         String
+  tasks        Task[]   @relation("TaskListToTask")
+  userId       String
+  user         User     @relation("UserToTaskList", fields: [userId], references: [id], onDelete: Cascade)
+  color        String   @default("")
+  emoji        String?
+  tasksCounter Float    @default(0)
+  createdAt    DateTime @default(now())
+
+  @@map("task_list")
+  @@unique([name, userId])
+}
+
+model Task {
+  id             String    @id @default(uuid())
+  userId         String
+  title          String
+  taskListId     String?
+  // taskListId   String
+  completed      Boolean   @default(false)
+  note           String    @default("")
+  taskList       TaskList? @relation("TaskListToTask", fields: [taskListId], references: [id], onDelete: Cascade)
+  date           DateTime?
+  createdAt      DateTime  @default(now())
+  homeIndex      Float     @default(0)
+  todayIndex     Float?
+  completedIndex Float?
+  defaultIndex   Float?
+
+  @@map("task")
+}
