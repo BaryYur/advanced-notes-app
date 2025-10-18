@@ -7,7 +7,7 @@ This guide explains how to install, run, and build the project.
   <img src="https://img.shields.io/badge/React-18.3.1-61dafb?logo=react&logoColor=white" alt="React version" /> 
   <img src="https://img.shields.io/badge/NestJS-10.x-e0234e?logo=nestjs&logoColor=white" alt="NestJS version" /> 
   <img src="https://img.shields.io/badge/Vite-5.x-646CFF?logo=vite&logoColor=white" alt="Vite version" /> 
-  <img src="https://img.shields.io/badge/Node.js-20.x-43853d?logo=node.js&logoColor=white" alt="Node.js version" />
+  <img src="https://img.shields.io/badge/Node.js-22.x-43853d?logo=node.js&logoColor=white" alt="Node.js version" />
 </p>
 
 ---
