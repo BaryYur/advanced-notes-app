@@ -5,8 +5,6 @@ import {
   NestModule,
 } from "@nestjs/common";
 
-import { ConfigModule } from "@nestjs/config";
-
 import { AuthMiddleware } from "./common/middlewares/auth.middleware";
 
 import { DatabaseModule } from "./modules/database/database.module";
@@ -18,10 +16,6 @@ import { TaskModule } from "./modules/task/task.module";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
-    }),
     DatabaseModule,
     AuthModule,
     UserModule,
