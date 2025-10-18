@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum UserAuthType {
@@ -45,8 +46,8 @@ model TaskList {
   tasksCounter Float    @default(0)
   createdAt    DateTime @default(now())
 
-  @@map("task_list")
   @@unique([name, userId])
+  @@map("task_list")
 }
 
 model Task {
