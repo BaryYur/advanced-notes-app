@@ -13,7 +13,7 @@ import helmet from "helmet";
 
 import { setupSwagger } from "./swagger";
 
-const basicAuth = require("express-basic-auth");
+import basicAuth from "express-basic-auth";
 
 async function bootstrap() {
   const configService = new ConfigService();
