@@ -5,7 +5,7 @@ import { ConfigService } from "@nestjs/config";
 
 import { ValidationPipe } from "@nestjs/common";
 
-import { IoAdapter } from "@nestjs/platform-socket.io";
+// import { IoAdapter } from "@nestjs/platform-socket.io";
 import { AppModule } from "./app.module";
 
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
@@ -48,7 +48,7 @@ async function bootstrap() {
       errorHttpStatusCode: 400,
     }),
   );
-  app.useWebSocketAdapter(new IoAdapter(app));
+  // app.useWebSocketAdapter(new IoAdapter(app));
 
   setupSwagger(app);
   app.use(helmet());
