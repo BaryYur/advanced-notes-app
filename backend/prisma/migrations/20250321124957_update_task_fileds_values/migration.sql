@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "task" ALTER COLUMN "taskListId" DROP NOT NULL,
+ALTER COLUMN "completed" SET DEFAULT false,
+ALTER COLUMN "note" SET DEFAULT '';

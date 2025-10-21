@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "task" ADD COLUMN     "index" DOUBLE PRECISION NOT NULL DEFAULT 0;
