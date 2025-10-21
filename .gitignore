@@ -12,7 +12,6 @@ package-lock.json
 # ============================================
 # ⚙️ Build outputs
 # ============================================
-dist/
 build/
 .tmp/
 temp/
@@ -22,7 +21,6 @@ coverage/
 # ⚛️ Frontend (Vite / React)
 # ============================================
 frontend/node_modules
-frontend/dist/
 frontend/.vite/
 frontend/.env
 frontend/.env.local
@@ -50,7 +48,6 @@ backend/*.log
 # Prisma
 backend/prisma/*.db
 backend/prisma/*.sqlite
-backend/prisma/migrations/
 
 # ============================================
 # ⚙️ TypeScript

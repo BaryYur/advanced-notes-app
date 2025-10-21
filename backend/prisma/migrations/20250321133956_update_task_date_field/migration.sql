@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "task" ALTER COLUMN "date" DROP NOT NULL,
+ALTER COLUMN "date" DROP DEFAULT;
