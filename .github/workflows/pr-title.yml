@@ -1,0 +1,31 @@
+name: Validate PR Title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "PR Title: $PR_TITLE"
+
+          # Regex patterns
+          PATTERN_STANDARD="^(fix|chore|feat|docs|test|refactor|style|perf|ci|build)(\([[:alnum:]-]+\))?: .+ \(([a-zA-Z0-9]+)-[[:digit:]]+\)$"
+          PATTERN_RELEASE="^chore\([[:alnum:]]+\): release (node-services|intent-slot) [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$"
+
+          if [[ ! "$PR_TITLE" =~ $PATTERN_STANDARD && ! "$PR_TITLE" =~ $PATTERN_RELEASE ]]; then
+            echo "❌ Error: The PR title does not follow the required convention."
+            echo ""
+            echo "Expected formats:"
+            echo "- fix|chore|feat|docs|test|refactor|style|perf|ci|build(scope?): description (ELE-1234)"
+            echo "- chore(scope): release node-services|intent-slot X.Y.Z"
+            exit 1
+          fi
+
+          echo "✅ PR title is valid."

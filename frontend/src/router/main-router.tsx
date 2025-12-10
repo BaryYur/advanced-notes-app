@@ -22,7 +22,7 @@ export const MainRouter = () => {
         <Route path="/:name" element={<TaskListPage />} />
         <Route
           path={pageRoutes.notFound}
-          element={<Navigate to="/app/home" />}
+          element={<Navigate to={pageRoutes.app.home} />}
         />
       </Routes>
     </>
