@@ -63,7 +63,7 @@ export class TaskListService {
         orderBy: { createdAt: "asc" },
       });
 
-    const lists = [];
+    const lists: TaskList[] = [];
 
     for (const list of taskLists) {
       const listItem = {

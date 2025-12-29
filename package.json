@@ -3,6 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "description": "Monorepo for Advanced Notes App (NestJS + React)",
+  "author": "BaryYur",
+  "type": "commonjs",
   "workspaces": [
     "backend",
     "frontend"
@@ -10,7 +12,7 @@
   "scripts": {
     "dev": "concurrently \"npm run start:dev -w backend\" \"npm run dev -w frontend\"",
     "build": "npm run build -w backend && npm run build -w frontend",
-    "start": "npm run start -w backend",
+    "start": "concurrently \"npm run start -w backend\" \"npm run start -w frontend\"",
     "format": "npm run format -w backend && npm run format -w frontend"
   },
   "devDependencies": {

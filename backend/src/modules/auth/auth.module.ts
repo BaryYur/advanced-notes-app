@@ -1,14 +1,11 @@
 import { Module } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 
-import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
+import { JwtStrategy } from "./jwt.strategy";
 import { UserService } from "../user/user.service";
-
-import { TokenService } from "./token.service";
-import { MailService } from "../mail/mail.service";
-import { CryptoUtil } from "../../common/utils/crypto.util";
 
 @Module({
   imports: [
@@ -16,15 +13,18 @@ import { CryptoUtil } from "../../common/utils/crypto.util";
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          secret: configService.get("JWT_SECRET"),
-        };
-      },
+      useFactory: (config: ConfigService): JwtModuleOptions => ({
+        secret:
+          config.get("JWT_SECRET") ||
+          "bdc38f57fe9a6388a0a195f43b6dd1c42e15d89bb781a1966e2bc016d26bba90",
+        signOptions: {
+          expiresIn: config.get("JWT_EXPIRES_IN") || "1h",
+        },
+      }),
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, TokenService, MailService, CryptoUtil],
-  exports: [TokenService],
+  providers: [AuthService, JwtStrategy, UserService],
+  exports: [AuthService],
 })
 export class AuthModule {}
