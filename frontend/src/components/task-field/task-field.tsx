@@ -8,7 +8,7 @@ import { useEnterKeys, useOutsideClick } from "@/hooks";
 
 import { TaskApiService } from "@/services";
 
-import { socket } from "@/vars";
+import { socket } from "@/lib";
 
 import { DatePickerDropdown } from "./date-picker-dropdown";
 import { TaskListDropdown } from "./task-list-dropdown";

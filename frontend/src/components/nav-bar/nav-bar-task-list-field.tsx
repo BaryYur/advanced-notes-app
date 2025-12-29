@@ -12,7 +12,7 @@ import { TaskListIconPicker } from "@/components";
 
 import { COLORS } from "@/lib/data";
 
-import { socket } from "@/vars";
+import { socket } from "@/lib";
 
 import { Command } from "lucide-react";
 

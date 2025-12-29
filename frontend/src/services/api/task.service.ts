@@ -1,6 +1,6 @@
 import { ListType } from "@/types";
 
-import { socket } from "@/vars";
+import { socket } from "@/lib";
 
 interface CreateTaskData {
   userId: string;

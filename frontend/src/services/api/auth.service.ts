@@ -1,6 +1,4 @@
-import { apiClient } from "@/vars";
-
-import { handleApiError } from "@/errors";
+import { apiClient } from "@/lib";
 
 export enum AuthType {
   Email = "email",
@@ -8,17 +6,11 @@ export enum AuthType {
 }
 
 const signIn = async (email: string, password: string, authType: AuthType) => {
-  try {
-    const response = await apiClient.post("/auth/sign-in", {
-      email,
-      password,
-      authType,
-    });
-
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error);
-  }
+  await apiClient.post("/auth/sign-in", {
+    email,
+    password,
+    authType,
+  });
 };
 
 const signUp = async (
@@ -28,27 +20,19 @@ const signUp = async (
   password: string,
   authType: AuthType,
 ) => {
-  try {
-    const response = await apiClient.post("/auth/sign-up", {
-      firstName,
-      lastName,
-      email,
-      password,
-      authType,
-    });
+  const response = await apiClient.post("/auth/sign-up", {
+    firstName,
+    lastName,
+    email,
+    password,
+    authType,
+  });
 
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error);
-  }
+  return response.data;
 };
 
 const sendResetPasswordCode = async (email: string) => {
-  try {
-    await apiClient.post("/auth/reset-password-code", { email });
-  } catch (error: any) {
-    handleApiError(error);
-  }
+  await apiClient.post("/auth/reset-password-code", { email });
 };
 
 const resetPassword = async (
@@ -56,15 +40,11 @@ const resetPassword = async (
   verificationCode: string,
   newPassword: string,
 ) => {
-  try {
-    await apiClient.post("/auth/reset-password", {
-      email,
-      verificationCode,
-      newPassword,
-    });
-  } catch (error: any) {
-    handleApiError(error);
-  }
+  await apiClient.post("/auth/reset-password", {
+    email,
+    verificationCode,
+    newPassword,
+  });
 };
 
 export const AuthApiService = {

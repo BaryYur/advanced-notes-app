@@ -4,7 +4,7 @@ import { AuthContext } from "./auth-context";
 
 import { ListType, Task } from "@/types";
 
-import { socket } from "@/vars";
+import { socket } from "@/lib";
 
 interface TasksType {
   [ListType.Home]: Task[];

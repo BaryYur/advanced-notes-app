@@ -1,8 +1,6 @@
-import { apiClient } from "@/vars";
+import { apiClient, socket } from "@/lib";
 
 import { TaskList, ListType } from "@/types";
-
-import { socket } from "@/vars";
 
 import { handleApiError } from "@/errors";
 

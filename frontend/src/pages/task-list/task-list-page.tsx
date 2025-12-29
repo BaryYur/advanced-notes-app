@@ -15,7 +15,7 @@ import {
   TasksList,
 } from "@/components";
 
-import { socket } from "@/vars";
+import { socket } from "@/lib";
 
 export const TaskListPage = () => {
   const params = useParams();

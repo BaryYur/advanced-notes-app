@@ -1,33 +1,17 @@
-import { Get, Body, Param, Controller, Patch } from "@nestjs/common";
+import { Controller, Get, UseGuards, Req } from "@nestjs/common";
+
+import { RequestWithUser } from "src/common/types";
 
 import { UserService } from "./user.service";
-import { UpdateUserDto } from "./dto/update-user.dto";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody } from "@nestjs/swagger";
-
-@ApiTags("Users")
-@Controller()
+@Controller("user")
 export class UserController {
-  public constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
 
-  @ApiOperation({ summary: "Update user by id" })
-  @ApiBody({ type: UpdateUserDto })
-  @ApiBearerAuth()
-  @Patch("/user/:id")
-  public async updateById(
-    @Param("id") id: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return this.userService.updateUserById(id, updateUserDto);
-  }
-
-  @ApiOperation({ summary: "Get user by id" })
-  @ApiBearerAuth()
-  @Get("/user/:id")
-  public async getById(
-    @Param("id") id: string,
-    // @Req() req: UserRequest,
-  ) {
-    return this.userService.findUserById(id);
+  @UseGuards(JwtAuthGuard)
+  @Get("/info")
+  public async getUserInfo(@Req() req: RequestWithUser) {
+    return this.userService.findUserById(req.user.id);
   }
 }
