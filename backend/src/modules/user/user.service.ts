@@ -1,81 +1,27 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
-import { UserAuthType, Prisma, User } from "@prisma/client";
-import { DatabaseService } from "../database/database.service";
+import { Prisma, User, UserAuthType } from "@prisma/client";
+
+import { DatabaseService } from "../database";
 
 @Injectable()
 export class UserService {
-  public constructor(private readonly database: DatabaseService) {}
+  constructor(private database: DatabaseService) {}
 
-  public async createUser(
-    createUserDto: Prisma.UserCreateInput,
-  ): Promise<User> {
-    const user = await this.database.user.create({
-      data: {
-        ...createUserDto,
-      },
-    });
-
-    return user;
+  async createUser(data: Prisma.UserCreateInput): Promise<User> {
+    return this.database.user.create({ data });
   }
 
-  public async findUserByEmail(
+  async findUserByEmail(
     email: string,
     authType: UserAuthType,
-  ): Promise<Partial<User> | null> {
-    const user = await this.database.user.findFirst({
-      where: {
-        email,
-        authType,
-      },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        authType: true,
-      },
+  ): Promise<User | null> {
+    return this.database.user.findFirst({
+      where: { email, authType },
     });
-
-    return user;
   }
 
-  public async findUserById(id: string) {
-    const user = await this.database.user.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        authType: true,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException("User not found");
-    }
-
-    return user;
+  async findUserById(id: string): Promise<User | null> {
+    return this.database.user.findUnique({ where: { id } });
   }
-
-  public async updateUserById(
-    id: string,
-    updateUserDto: Prisma.UserUpdateInput,
-  ): Promise<Partial<User> | null> {
-    const user = await this.database.user.update({
-      where: { id },
-      data: { ...updateUserDto },
-    });
-
-    if (!user) {
-      throw new NotFoundException("User is not found");
-    }
-
-    return user;
-  }
-
-  public async deleteUserById(id: string) {}
 }

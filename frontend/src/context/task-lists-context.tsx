@@ -4,7 +4,7 @@ import { AuthContext, TasksContextProvider } from "@/context";
 
 import { TaskList } from "@/types";
 
-import { socket } from "@/vars";
+import { socket } from "@/lib";
 
 interface TaskListsContextType {
   taskLists: TaskList[];

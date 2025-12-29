@@ -1,12 +1,12 @@
-import { apiClient } from "@/vars";
+import { apiClient } from "@/lib";
 
 import { User } from "@/types";
 
 import { handleApiError } from "@/errors";
 
-const getUser = async (id: string) => {
+const getUser = async () => {
   try {
-    const response = await apiClient.get(`/user/${id}`);
+    const response = await apiClient.get("/user/info");
 
     return response.data as User;
   } catch (error) {

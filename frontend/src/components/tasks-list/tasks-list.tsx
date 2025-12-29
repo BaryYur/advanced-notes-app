@@ -5,7 +5,7 @@ import { ListType, Task } from "@/types";
 import { TaskListItem } from "./task-list-item";
 import { SortableList } from "./sortable-list";
 
-import { socket } from "@/vars";
+import { socket } from "@/lib";
 
 interface TasksListProps {
   tasks: Task[];

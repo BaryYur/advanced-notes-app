@@ -1,4 +1,5 @@
 // import { ConfigService } from "@nestjs/config";
+import { NotFoundException } from "@nestjs/common";
 
 import {
   WebSocketGateway,
@@ -61,11 +62,9 @@ export class TaskGateway {
 
   @SubscribeMessage("getListTasks")
   async getListTasks(@MessageBody() taskListId: string) {
-    const tasks = await this.taskService.findByTaskListId(taskListId);
-
-    const orderedTasks = tasks.sort((a, b) => a.defaultIndex - b.defaultIndex);
-
-    return { event: "userListTasks", data: orderedTasks };
+    // const tasks = await this.taskService.findByTaskListId(taskListId);
+    // const orderedTasks = tasks.sort((a, b) => a.defaultIndex - b.defaultIndex);
+    // return { event: "userListTasks", data: orderedTasks };
   }
 
   @SubscribeMessage("getHomeTasks")
@@ -94,29 +93,26 @@ export class TaskGateway {
       task: UpdateTaskDto;
     },
   ) {
-    await this.taskService.updateTask(updateDto.id, updateDto.task);
-
-    const task = await this.taskService.findOneTask(updateDto.id);
-    const taskLists = await this.taskListService.findTaskListsByUserId(
-      task.userId,
-    );
-    this.server.emit("taskListsByUserId", taskLists);
-    this.server.emit("taskUpdated", task);
-
-    const homeTasks = await this.taskService.getHomeTasks(task.userId);
-    this.server.emit("userHomeTasks", homeTasks);
-
-    const completedTasks = await this.taskService.getCompletedTasks(
-      task.userId,
-    );
-    this.server.emit("userCompletedTasks", completedTasks);
-
-    const listTasks = await this.taskService.findByTaskListId(task.taskListId);
-    const orderedTasks = listTasks.sort(
-      (a, b) => a.defaultIndex - b.defaultIndex,
-    );
-
-    return { event: "userListTasks", data: orderedTasks };
+    // await this.taskService.updateTask(updateDto.id, updateDto.task);
+    // const task = await this.taskService.findOneTask(updateDto.id);
+    // if (!task) throw new NotFoundException("Task not found");
+    // const taskLists = await this.taskListService.findTaskListsByUserId(
+    //   task.userId,
+    // );
+    // this.server.emit("taskListsByUserId", taskLists);
+    // this.server.emit("taskUpdated", task);
+    // const homeTasks = await this.taskService.getHomeTasks(task.userId);
+    // this.server.emit("userHomeTasks", homeTasks);
+    // const completedTasks = await this.taskService.getCompletedTasks(
+    //   task.userId,
+    // );
+    // this.server.emit("userCompletedTasks", completedTasks);
+    // if (!task.taskListId) throw new NotFoundException("Task list ID not found");
+    // const listTasks = await this.taskService.findByTaskListId(task.taskListId);
+    // const orderedTasks = listTasks.sort(
+    //   (a, b) => a.defaultIndex - b.defaultIndex,
+    // );
+    // return { event: "userListTasks", data: orderedTasks };
   }
 
   @SubscribeMessage("getCompletedTasks")
@@ -147,29 +143,25 @@ export class TaskGateway {
       id: string;
     },
   ) {
-    const task = await this.taskService.findOneTask(removeTaskDto.id);
-
-    await this.taskService.removeTask(removeTaskDto.id);
-
-    const homeTasks = await this.taskService.getHomeTasks(task.userId);
-    this.server.emit("userHomeTasks", homeTasks);
-
-    const completedTasks = await this.taskService.getCompletedTasks(
-      task.userId,
-    );
-    this.server.emit("userCompletedTasks", completedTasks);
-
-    const listTasks = await this.taskService.findByTaskListId(task.taskListId);
-    const orderedTasks = listTasks.sort(
-      (a, b) => a.defaultIndex - b.defaultIndex,
-    );
-
-    const taskListsByUserId = await this.taskListService.findTaskListsByUserId(
-      task.userId,
-    );
-    console.log(taskListsByUserId, "by user");
-    this.server.emit("taskListsByUserId", taskListsByUserId);
-
-    return { event: "userListTasks", data: orderedTasks };
+    // const task = await this.taskService.findOneTask(removeTaskDto.id);
+    // if (!task) throw new NotFoundException("Task not found");
+    // await this.taskService.removeTask(removeTaskDto.id);
+    // const homeTasks = await this.taskService.getHomeTasks(task.userId);
+    // this.server.emit("userHomeTasks", homeTasks);
+    // const completedTasks = await this.taskService.getCompletedTasks(
+    //   task.userId,
+    // );
+    // this.server.emit("userCompletedTasks", completedTasks);
+    // if (!task.taskListId) throw new NotFoundException("Task list ID not found");
+    // const listTasks = await this.taskService.findByTaskListId(task.taskListId);
+    // const orderedTasks = listTasks.sort(
+    //   (a, b) => a.defaultIndex - b.defaultIndex,
+    // );
+    // const taskListsByUserId = await this.taskListService.findTaskListsByUserId(
+    //   task.userId,
+    // );
+    // console.log(taskListsByUserId, "by user");
+    // this.server.emit("taskListsByUserId", taskListsByUserId);
+    // return { event: "userListTasks", data: orderedTasks };
   }
 }
