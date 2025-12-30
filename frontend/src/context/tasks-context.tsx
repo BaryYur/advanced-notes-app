@@ -60,6 +60,18 @@ export const TasksContextProvider = ({
     }
   }, [user]);
 
+  useEffect(() => {
+    socket.emit("getListTasks");
+
+    socket.on("userListTasks", (data: Task[]) => {
+      console.log("data:", data);
+    });
+
+    return () => {
+      socket.off("userListTasks");
+    };
+  }, []);
+
   return (
     <TasksContext.Provider
       value={{

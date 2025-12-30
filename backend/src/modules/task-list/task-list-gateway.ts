@@ -1,4 +1,6 @@
-import { ConfigService } from "@nestjs/config";
+import { UseGuards } from "@nestjs/common";
+
+import { TaskListType, User } from "@prisma/client";
 
 import {
   WebSocketGateway,
@@ -9,19 +11,19 @@ import {
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
 
+import { RequestWithUser } from "src/common/types";
+
 import { TaskListService } from "./task-list.service";
+
+import { WsJwtGuard } from "../auth/ws-jwt-auth.guard";
 
 import { CreateTaskListDto } from "./dto/create-task-list-dto";
 import { UpdateTaskListDto } from "./dto/update-task-list-dto";
-import { TaskListType } from "@prisma/client";
 
-// const configService = new ConfigService();
+import { CurrentWsUser } from "../../common/decorators/ws-user.decorator";
 
-@WebSocketGateway(4001, {
-  cors: {
-    // origin: configService.get("FRONTEND_DOMAIN"),
-    origin: "*",
-  },
+@WebSocketGateway({
+  // namespace: "task-list",
 })
 export class TaskListGateway {
   @WebSocketServer()
@@ -29,26 +31,32 @@ export class TaskListGateway {
 
   constructor(private readonly taskListService: TaskListService) {}
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("getTaskList")
   async getTaskList(
-    @MessageBody() getTaskListDto: { userId: string; name: string },
+    @MessageBody() getTaskListDto: { name: string },
+    @CurrentWsUser() user: User,
   ) {
     const taskList = await this.taskListService.findTaskList(
-      getTaskListDto.userId,
+      user.id,
       getTaskListDto.name,
     );
 
     this.server.emit("taskListFetched", taskList);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("createTaskList")
-  async createTaskList(@MessageBody() createTaskListDto: CreateTaskListDto) {
-    const taskList =
-      await this.taskListService.createTaskList(createTaskListDto);
+  async createTaskList(
+    @MessageBody() dto: CreateTaskListDto,
+    @CurrentWsUser() user: User,
+  ) {
+    const taskList = await this.taskListService.createTaskList(user.id, dto);
 
     this.server.emit("taskListCreated", taskList);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("updateTaskList")
   async updateTaskList(
     @MessageBody()
@@ -67,6 +75,7 @@ export class TaskListGateway {
     }
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("getTaskListsByUserId")
   async getTaskListsByUserId(
     @MessageBody() userId: string,
@@ -76,6 +85,7 @@ export class TaskListGateway {
     return { event: "taskListsByUserId", data: taskLists };
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("deleteTaskList")
   async deleteTaskList(@MessageBody() id: string) {
     await this.taskListService.deleteTaskList(id);
@@ -83,6 +93,7 @@ export class TaskListGateway {
     this.server.emit("taskListDeleted", id);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("deleteAllListTasks")
   async deleteTaskListTasks(
     @MessageBody()
