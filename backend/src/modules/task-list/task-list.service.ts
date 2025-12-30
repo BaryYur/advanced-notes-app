@@ -17,11 +17,12 @@ export class TaskListService {
   constructor(private readonly database: DatabaseService) {}
 
   async createTaskList(
+    userId: string,
     createTaskListDto: CreateTaskListDto,
   ): Promise<TaskList> {
     const user = await this.database.user.findUnique({
       where: {
-        id: createTaskListDto.userId,
+        id: userId,
       },
     });
 
@@ -31,6 +32,7 @@ export class TaskListService {
 
     const taskList = await this.database.taskList.create({
       data: {
+        userId,
         ...createTaskListDto,
       },
     });
