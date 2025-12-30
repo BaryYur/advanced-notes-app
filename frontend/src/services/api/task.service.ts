@@ -28,8 +28,6 @@ const deleteTask = (data: { id: string }) => {
   socket.emit("removeTask", data);
 };
 
-// const getCompleted
-
 export const TaskApiService = {
   createTask,
   updateTask,
