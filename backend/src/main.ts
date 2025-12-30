@@ -3,10 +3,9 @@ import { ConfigService } from "@nestjs/config";
 import { ValidationPipe } from "@nestjs/common";
 
 import { HttpExceptionFilter } from "./common/filters";
+import { SocketIoAdapter } from "./common/utils/socket-adapter";
 
 import { AppModule } from "./app.module";
-
-import { IoAdapter } from "@nestjs/platform-socket.io";
 
 import * as cookieParser from "cookie-parser";
 
@@ -32,7 +31,7 @@ async function bootstrap() {
       errorHttpStatusCode: 400,
     }),
   );
-  app.useWebSocketAdapter(new IoAdapter(app));
+  app.useWebSocketAdapter(new SocketIoAdapter(app));
 
   await app.listen(PORT);
 }

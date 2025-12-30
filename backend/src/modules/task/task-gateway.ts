@@ -1,5 +1,4 @@
-// import { ConfigService } from "@nestjs/config";
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException, UseGuards } from "@nestjs/common";
 
 import {
   WebSocketGateway,
@@ -9,22 +8,20 @@ import {
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
 
-import { TaskListType } from "@prisma/client";
+import { TaskListType, User } from "@prisma/client";
 
 import { TaskService } from "./task.service";
 import { TaskListService } from "./../task-list/task-list.service";
+import { WsJwtGuard } from "../auth/ws-jwt-auth.guard";
 
 import { CreateTaskDto } from "./dto/create-task-dto";
 import { UpdateTasksIndexesDto } from "./dto/update-tasks-indexes-dto";
 import { UpdateTaskDto } from "./dto/update-task-dto";
 
-// const configService = new ConfigService();
+import { CurrentWsUser } from "../../common/decorators/ws-user.decorator";
 
-@WebSocketGateway(4001, {
-  cors: {
-    // origin: configService.get("FRONTEND_DOMAIN"),
-    origin: "*",
-  },
+@WebSocketGateway({
+  // namespace: "task",
 })
 export class TaskGateway {
   @WebSocketServer()
@@ -35,6 +32,7 @@ export class TaskGateway {
     private readonly taskListService: TaskListService,
   ) {}
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("createTask")
   async createTaskList(
     @MessageBody()
@@ -60,8 +58,12 @@ export class TaskGateway {
     return { event: "userHomeTasks", data: tasks };
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("getListTasks")
-  async getListTasks(@MessageBody() taskListId: string) {
+  async getListTasks(
+    @MessageBody() taskListId: string,
+    @CurrentWsUser() user: User,
+  ) {
     // const tasks = await this.taskService.findByTaskListId(taskListId);
     // const orderedTasks = tasks.sort((a, b) => a.defaultIndex - b.defaultIndex);
     // return { event: "userListTasks", data: orderedTasks };
@@ -74,6 +76,7 @@ export class TaskGateway {
     return { event: "userHomeTasks", data: tasks };
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("updateTaskIndexes")
   async updateTaskIndexes(
     @MessageBody() updateTasksIndexesDto: UpdateTasksIndexesDto,
@@ -85,6 +88,7 @@ export class TaskGateway {
     return { event: "taskIndexesUpdated", data: tasks };
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("updateTask")
   async updateTask(
     @MessageBody()
@@ -115,6 +119,7 @@ export class TaskGateway {
     // return { event: "userListTasks", data: orderedTasks };
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("getCompletedTasks")
   async getCompletedTasksByUserId(@MessageBody() userId: string) {
     const taskLists = await this.taskService.getCompletedTasks(userId);
@@ -122,6 +127,7 @@ export class TaskGateway {
     return { event: "userCompletedTasks", data: taskLists };
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("removeAllTasks")
   async removeAllTasks(
     @MessageBody()
@@ -136,6 +142,7 @@ export class TaskGateway {
     // update completed, home, today
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage("removeTask")
   async removeTask(
     @MessageBody()
