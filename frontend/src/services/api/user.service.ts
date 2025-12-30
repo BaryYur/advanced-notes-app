@@ -2,16 +2,10 @@ import { apiClient } from "@/lib";
 
 import { User } from "@/types";
 
-import { handleApiError } from "@/errors";
-
 const getUser = async () => {
-  try {
-    const response = await apiClient.get("/user/info");
+  const response = await apiClient.get<User>("/user/info");
 
-    return response.data as User;
-  } catch (error) {
-    handleApiError(error);
-  }
+  return response.data;
 };
 
 export const UserApiService = {

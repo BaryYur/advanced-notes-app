@@ -1,8 +1,6 @@
-import { apiClient, socket } from "@/lib";
+import { socket } from "@/lib";
 
-import { TaskList, ListType } from "@/types";
-
-import { handleApiError } from "@/errors";
+import { ListType } from "@/types";
 
 export interface CreateTaskListData {
   name: string;
@@ -13,16 +11,6 @@ export interface CreateTaskListData {
 
 const createTaskList = (data: CreateTaskListData) => {
   socket.emit("createTaskList", data);
-};
-
-const getTaskList = async (userId: string, name: string) => {
-  try {
-    const response = await apiClient.get(`/task-list/${userId}/${name}`);
-
-    return response.data as TaskList;
-  } catch (error) {
-    handleApiError(error);
-  }
 };
 
 export interface UpdateTaskListData {
@@ -47,7 +35,6 @@ const deleteAllTasks = (data: {
 };
 
 export const TaskListApiServices = {
-  getTaskList,
   createTaskList,
   updateTaskList,
   deleteTaskList,
