@@ -3,13 +3,11 @@ import { ConfigService } from "@nestjs/config";
 
 import * as nodemailer from "nodemailer";
 
-const configService = new ConfigService();
-
 @Injectable()
 export class MailService {
   private transporter;
 
-  constructor() {
+  constructor(configService: ConfigService) {
     this.transporter = nodemailer.createTransport({
       host: configService.get("MAIL_HOST"),
       secure: true,

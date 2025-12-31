@@ -2,9 +2,18 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
+import { pageRoutes } from "@/config";
+
 import { useSendResetPasswordCode } from "@/hooks";
 
-import { Modal, Button } from "@/components";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components";
 
 import toast from "react-hot-toast";
 
@@ -40,37 +49,53 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
   useEffect(() => {
     if (isSendingSuccess) {
       onClose();
-      navigate("/reset-password", {
+      navigate(pageRoutes.resetPassword, {
         state: { recoveryEmail: resetPasswordEmail },
       });
       setResetPasswordEmail("");
     }
-  }, [isSendingSuccess]);
+  }, [isSendingSuccess, navigate, onClose, resetPasswordEmail]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="px-6 pb-5 pt-2">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="w-[400px] overflow-hidden px-0 pb-0 sm:rounded-xl">
         <form onSubmit={submitHandler}>
-          <p className="text-lg font-semibold">Send verification code</p>
-          <div className="mt-2 flex">
+          <div className="px-5">
+            <DialogTitle className="text-lg font-semibold">
+              Send verification code
+            </DialogTitle>
+            <DialogDescription className="text-xs text-zinc-400">
+              It sends verification code to your email
+            </DialogDescription>
             <input
               value={resetPasswordEmail}
               disabled={isSendingPending}
               onChange={(event) => setResetPasswordEmail(event.target.value)}
-              className="w-[280px] rounded-l-xl border-[1px] bg-gray-100 p-3 focus:border-blue-400 disabled:opacity-60"
-              placeholder="Your email"
+              className="mt-5 w-full rounded-xl border bg-gray-200/30 p-3 focus:border-blue-400 disabled:opacity-60"
+              placeholder="Enter your email"
             />
+          </div>
+
+          <DialogFooter className="mt-6 bg-gray-200/60 px-5 py-3">
+            <Button
+              type="button"
+              variant="destructive"
+              className="w-[84px]"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
             <Button
               type="submit"
+              className="w-[84px]"
               disabled={isSendingPending}
-              className="rounded-l-none rounded-r-xl border-[1px] border-black bg-primary px-5 py-3 text-white disabled:bg-zinc-600"
               loading={isSendingPending}
             >
               Send
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
 };
