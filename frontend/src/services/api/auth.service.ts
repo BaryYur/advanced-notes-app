@@ -1,11 +1,12 @@
 import { apiClient } from "@/lib";
 
-export enum AuthType {
-  Email = "email",
-  Google = "google",
-}
+import { UserAuthType } from "@/types";
 
-const signIn = async (email: string, password: string, authType: AuthType) => {
+const signIn = async (
+  email: string,
+  password: string,
+  authType: UserAuthType,
+) => {
   await apiClient.post("/auth/sign-in", {
     email,
     password,
@@ -18,7 +19,7 @@ const signUp = async (
   lastName: string,
   email: string,
   password: string,
-  authType: AuthType,
+  authType: UserAuthType,
 ) => {
   const response = await apiClient.post("/auth/sign-up", {
     firstName,

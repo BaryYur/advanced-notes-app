@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-import { useSignIn, useSignUp, SignUpData, useResetPassword } from "@/hooks";
-import { AuthType } from "@/services";
-
-import { Input, Button, BackgroundWrapper } from "@/components";
-import { ResetPasswordModal } from "./components/reset-password-modal";
-
 import { pageRoutes } from "@/config";
 
-import { GoogleLogin } from "@react-oauth/google";
+import { useSignIn, useSignUp, SignUpData, useResetPassword } from "@/hooks";
+
+import { UserAuthType } from "@/types";
+
+import { Input, Button, BackgroundWrapper } from "@/components";
+import { ResetPasswordModal } from "./components";
+
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 import { jwtDecode } from "jwt-decode";
 
@@ -69,7 +70,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
       signInMutation({
         email: formData.email.trim(),
         password: formData.password.trim(),
-        authType: AuthType.Email,
+        authType: UserAuthType.EMAIL,
       });
     }
 
@@ -88,7 +89,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
         lastName: formData.lastName.trim(),
         email: formData.email.trim(),
         password: formData.password.trim(),
-        authType: AuthType.Email,
+        authType: UserAuthType.EMAIL,
       });
     }
 
@@ -101,7 +102,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
     }
   };
 
-  const googleAuthSuccessHandler = async (credentialResponse: any) => {
+  const googleAuthSuccessHandler = async (
+    credentialResponse: CredentialResponse,
+  ) => {
     const user: { email: string; family_name: string; given_name: string } =
       jwtDecode(credentialResponse?.credential as string);
 
@@ -109,7 +112,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
       signInMutation({
         email: user.email,
         password: "",
-        authType: AuthType.Google,
+        authType: UserAuthType.GOOGLE,
       });
     } else {
       signUpMutation({
@@ -117,7 +120,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
         lastName: user.family_name,
         email: user.email,
         password: "",
-        authType: AuthType.Google,
+        authType: UserAuthType.GOOGLE,
       });
     }
   };
@@ -128,7 +131,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
 
   useEffect(() => {
     if (!recoveryEmail) navigate(pageRoutes.signIn);
-  }, [recoveryEmail]);
+  }, [recoveryEmail, navigate]);
 
   const headingTitle = {
     signIn: "Sign in",
@@ -240,7 +243,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
                 )}
                 <Button
                   type="submit"
-                  className="mt-2 p-3"
+                  className="mt-2 rounded-xl"
+                  size="lg"
                   loading={disabledFormField}
                   disabled={disabledFormField}
                 >

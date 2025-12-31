@@ -2,7 +2,9 @@ import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { AuthApiService, AuthType } from "@/services";
+import { UserAuthType } from "@/types";
+
+import { AuthApiService } from "@/services";
 
 import toast from "react-hot-toast";
 import { handleToastError } from "@/errors";
@@ -15,7 +17,7 @@ export const useSignIn = () => {
     mutationFn: (data: {
       email: string;
       password: string;
-      authType: AuthType;
+      authType: UserAuthType;
     }) => AuthApiService.signIn(data.email, data.password, data.authType),
     onSuccess: () => {
       toast.success("Successfully logged in");
@@ -38,7 +40,7 @@ export type SignUpData = {
   password: string;
 };
 
-type ExtendedSignUpData = SignUpData & Record<"authType", AuthType>;
+type ExtendedSignUpData = SignUpData & Record<"authType", UserAuthType>;
 
 export const useSignUp = () => {
   const navigate = useNavigate();
