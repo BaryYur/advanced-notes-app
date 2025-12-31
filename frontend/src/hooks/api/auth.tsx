@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { pageRoutes } from "@/config";
+
 import { UserAuthType } from "@/types";
 
 import { AuthApiService } from "@/services";
@@ -23,7 +25,7 @@ export const useSignIn = () => {
       toast.success("Successfully logged in");
 
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate("/app/home");
+      navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
     },
     onError: (error) => {
       handleToastError(error);
@@ -59,7 +61,7 @@ export const useSignUp = () => {
       toast.success("Successfully logged in");
 
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate("/app/home");
+      navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
     },
     onError: (error) => {
       handleToastError(error);
@@ -75,7 +77,7 @@ export const useResetPassword = () => {
   const { ...mutationProps } = useMutation({
     mutationFn: (data: {
       email: string;
-      verificationCode: string;
+      verificationCode: number;
       newPassword: string;
     }) =>
       AuthApiService.resetPassword(
@@ -84,8 +86,8 @@ export const useResetPassword = () => {
         data.newPassword,
       ),
     onSuccess: () => {
-      toast.success("Successfully changed");
-      navigate("/sign-in");
+      toast.success("Password successfully changed");
+      navigate(`/${pageRoutes.signIn}`);
     },
     onError: (error) => {
       handleToastError(error);
