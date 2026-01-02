@@ -2,26 +2,28 @@ import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { AuthApiService, AuthType } from "@/services";
+import { pageRoutes } from "@/config";
+
+import { UserAuthType } from "@/types";
+
+import { AuthApiService } from "@/services";
 
 import toast from "react-hot-toast";
 import { handleToastError } from "@/errors";
 
 export const useSignIn = () => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { ...mutationProps } = useMutation({
     mutationFn: (data: {
       email: string;
       password: string;
-      authType: AuthType;
+      authType: UserAuthType;
     }) => AuthApiService.signIn(data.email, data.password, data.authType),
     onSuccess: () => {
       toast.success("Successfully logged in");
 
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate("/app/home");
     },
     onError: (error) => {
       handleToastError(error);
@@ -38,10 +40,9 @@ export type SignUpData = {
   password: string;
 };
 
-type ExtendedSignUpData = SignUpData & Record<"authType", AuthType>;
+type ExtendedSignUpData = SignUpData & Record<"authType", UserAuthType>;
 
 export const useSignUp = () => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { ...mutationProps } = useMutation({
@@ -57,11 +58,18 @@ export const useSignUp = () => {
       toast.success("Successfully logged in");
 
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate("/app/home");
     },
     onError: (error) => {
       handleToastError(error);
     },
+  });
+
+  return mutationProps;
+};
+
+export const useLogout = () => {
+  const { ...mutationProps } = useMutation({
+    mutationFn: () => AuthApiService.logout(),
   });
 
   return mutationProps;
@@ -73,7 +81,7 @@ export const useResetPassword = () => {
   const { ...mutationProps } = useMutation({
     mutationFn: (data: {
       email: string;
-      verificationCode: string;
+      verificationCode: number;
       newPassword: string;
     }) =>
       AuthApiService.resetPassword(
@@ -82,8 +90,8 @@ export const useResetPassword = () => {
         data.newPassword,
       ),
     onSuccess: () => {
-      toast.success("Successfully changed");
-      navigate("/sign-in");
+      toast.success("Password successfully changed");
+      navigate(`/${pageRoutes.signIn}`);
     },
     onError: (error) => {
       handleToastError(error);

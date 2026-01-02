@@ -1,7 +1,12 @@
 import { Post, Controller, Body, Res } from "@nestjs/common";
 import { Response } from "express";
 
-import { SignInDto, SignUpDto } from "./dto";
+import {
+  SignInDto,
+  SignUpDto,
+  ResetPasswordCodeDto,
+  ResetPasswordDto,
+} from "./dto";
 
 import { AuthService } from "./auth.service";
 
@@ -10,7 +15,7 @@ export class AuthController {
   public constructor(private readonly authService: AuthService) {}
 
   @Post("/sign-up")
-  public async signUp(
+  async signUp(
     @Body() dto: SignUpDto,
     @Res({ passthrough: true }) res: Response,
   ) {
@@ -28,7 +33,7 @@ export class AuthController {
   }
 
   @Post("/sign-in")
-  public async signIn(
+  async signIn(
     @Body() dto: SignInDto,
     @Res({ passthrough: true }) res: Response,
   ) {
@@ -43,5 +48,24 @@ export class AuthController {
     });
 
     return { success: true };
+  }
+
+  @Post("/logout")
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie("accessToken", {
+      path: "/",
+    });
+
+    return { success: true };
+  }
+
+  @Post("/reset-password-code")
+  async getResetPasswordCode(@Body() dto: ResetPasswordCodeDto) {
+    return this.authService.getResetPasswordCode(dto);
+  }
+
+  @Post("/reset-password")
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto);
   }
 }

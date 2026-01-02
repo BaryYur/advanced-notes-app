@@ -2,21 +2,20 @@ import React, { useEffect, useState } from "react";
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-import { useSignIn, useSignUp, SignUpData, useResetPassword } from "@/hooks";
-import { AuthType } from "@/services";
-
-import { Input, Button, BackgroundWrapper } from "@/components";
-import { ResetPasswordModal } from "./components/reset-password-modal";
-
 import { pageRoutes } from "@/config";
 
-import { GoogleLogin } from "@react-oauth/google";
+import { useSignIn, useSignUp, SignUpData, useResetPassword } from "@/hooks";
+
+import { UserAuthType } from "@/types";
+
+import { Input, Button, BackgroundWrapper } from "@/components";
+import { ResetPasswordModal } from "./components";
+
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 import { jwtDecode } from "jwt-decode";
 
 import { ChevronLeft } from "lucide-react";
-
-import * as motion from "motion/react-client";
 
 import toast from "react-hot-toast";
 
@@ -69,7 +68,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
       signInMutation({
         email: formData.email.trim(),
         password: formData.password.trim(),
-        authType: AuthType.Email,
+        authType: UserAuthType.EMAIL,
       });
     }
 
@@ -88,20 +87,22 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
         lastName: formData.lastName.trim(),
         email: formData.email.trim(),
         password: formData.password.trim(),
-        authType: AuthType.Email,
+        authType: UserAuthType.EMAIL,
       });
     }
 
     if (authPageType === "resetPassword") {
       resetPasswordMutation({
         email: recoveryEmail,
-        verificationCode: resetPasswordFormData.verificationCode,
+        verificationCode: Number(resetPasswordFormData.verificationCode.trim()),
         newPassword: resetPasswordFormData.newPassword.trim(),
       });
     }
   };
 
-  const googleAuthSuccessHandler = async (credentialResponse: any) => {
+  const googleAuthSuccessHandler = async (
+    credentialResponse: CredentialResponse,
+  ) => {
     const user: { email: string; family_name: string; given_name: string } =
       jwtDecode(credentialResponse?.credential as string);
 
@@ -109,7 +110,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
       signInMutation({
         email: user.email,
         password: "",
-        authType: AuthType.Google,
+        authType: UserAuthType.GOOGLE,
       });
     } else {
       signUpMutation({
@@ -117,7 +118,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
         lastName: user.family_name,
         email: user.email,
         password: "",
-        authType: AuthType.Google,
+        authType: UserAuthType.GOOGLE,
       });
     }
   };
@@ -127,8 +128,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
   };
 
   useEffect(() => {
-    if (!recoveryEmail) navigate(pageRoutes.signIn);
-  }, [recoveryEmail]);
+    if (
+      !recoveryEmail &&
+      location.pathname === `/${pageRoutes.resetPassword}`
+    ) {
+      navigate(`/${pageRoutes.signIn}`);
+    }
+  }, [recoveryEmail, navigate, location.pathname]);
 
   const headingTitle = {
     signIn: "Sign in",
@@ -144,170 +150,155 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
             Notes app
           </h1>
 
-          <motion.div
-            key={authPageType}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={
-              ((recoveryEmail && authPageType === "resetPassword") ||
-                authPageType !== "resetPassword") && { opacity: 1, scale: 1 }
-            }
-            transition={{
-              duration: 0.4,
-              scale: { type: "keyframes", visualDuration: 0.2, bounce: 0.2 },
-            }}
-          >
-            <div className="mt-8 w-[430px] rounded-3xl bg-card p-10 shadow-xl">
-              <h2 className="text-xl font-semibold">
-                {headingTitle[authPageType]}
-              </h2>
+          <div className="mt-8 w-[430px] rounded-3xl bg-card p-10 shadow-xl">
+            <h2 className="text-xl font-semibold">
+              {headingTitle[authPageType]}
+            </h2>
 
-              <form
-                onSubmit={submitHandler}
-                className="mt-3 flex flex-col gap-2"
-              >
-                {authPageType === "signUp" && (
-                  <>
-                    <Input
-                      disabled={disabledFormField}
-                      placeholder="First name"
-                      value={formData.firstName}
-                      name="firstName"
-                      onChange={changeInputHandler}
-                      className="rounded-xl bg-gray-100 p-3"
-                    />
-                    <Input
-                      disabled={disabledFormField}
-                      placeholder="Last name"
-                      value={formData.lastName}
-                      name="lastName"
-                      onChange={changeInputHandler}
-                      className="rounded-xl bg-gray-100 p-3"
-                    />
-                  </>
-                )}
-
-                {authPageType !== "resetPassword" && (
-                  <>
-                    <Input
-                      disabled={disabledFormField}
-                      placeholder="Email"
-                      value={formData.email}
-                      name="email"
-                      onChange={changeInputHandler}
-                      className="rounded-xl bg-gray-100 p-3"
-                    />
-                    <Input
-                      disabled={disabledFormField}
-                      placeholder="Password"
-                      withHideIcon
-                      value={formData.password}
-                      type="password"
-                      name="password"
-                      onChange={changeInputHandler}
-                      className="w-full rounded-xl bg-gray-100 p-3 pr-11"
-                    />
-                  </>
-                )}
-
-                {authPageType === "resetPassword" && (
-                  <>
-                    <Input
-                      placeholder="Verification code"
-                      value={resetPasswordFormData.verificationCode}
-                      onChange={(event) => {
-                        setResetPasswordFormData({
-                          ...resetPasswordFormData,
-                          verificationCode: event.target.value,
-                        });
-                      }}
-                      className="rounded-xl bg-gray-100 p-3"
-                    />
-                    <Input
-                      disabled={disabledFormField}
-                      placeholder="New password"
-                      value={resetPasswordFormData.newPassword}
-                      type="password"
-                      name="newPassword"
-                      onChange={(event) => {
-                        setResetPasswordFormData({
-                          ...resetPasswordFormData,
-                          newPassword: event.target.value,
-                        });
-                      }}
-                      className="w-full rounded-xl bg-gray-100 p-3 pr-11"
-                    />
-                  </>
-                )}
-                <Button
-                  type="submit"
-                  className="mt-2 p-3"
-                  loading={disabledFormField}
-                  disabled={disabledFormField}
-                >
-                  {authPageType === "resetPassword" ? (
-                    <span>Save</span>
-                  ) : (
-                    <span>Submit</span>
-                  )}
-                </Button>
-              </form>
+            <form onSubmit={submitHandler} className="mt-3 flex flex-col gap-2">
+              {authPageType === "signUp" && (
+                <>
+                  <Input
+                    disabled={disabledFormField}
+                    placeholder="First name"
+                    value={formData.firstName}
+                    name="firstName"
+                    onChange={changeInputHandler}
+                    className="rounded-xl bg-gray-100 p-3"
+                  />
+                  <Input
+                    disabled={disabledFormField}
+                    placeholder="Last name"
+                    value={formData.lastName}
+                    name="lastName"
+                    onChange={changeInputHandler}
+                    className="rounded-xl bg-gray-100 p-3"
+                  />
+                </>
+              )}
 
               {authPageType !== "resetPassword" && (
                 <>
-                  <div className="py-3">
-                    <GoogleLogin
-                      onSuccess={googleAuthSuccessHandler}
-                      onError={googleAuthErrorHandler}
-                    />
-                  </div>
-
-                  <div className="pt-2">
-                    {authPageType === "signIn" && (
-                      <>
-                        <p className="text-sm">
-                          <span>Don't have an account? </span>
-                          <Link
-                            to={pageRoutes.signUp}
-                            className="font-medium text-blue-400 hover:opacity-80"
-                          >
-                            Sign up
-                          </Link>
-                        </p>
-                        <button
-                          onClick={() => setIsResetPasswordModalOpen(true)}
-                          className="mt-2 text-sm font-medium text-blue-400 hover:opacity-80"
-                        >
-                          Forgot password
-                        </button>
-                      </>
-                    )}
-
-                    {authPageType === "signUp" && (
-                      <p className="text-sm">
-                        <span>Already have an account? </span>
-                        <Link
-                          to={pageRoutes.signIn}
-                          className="font-medium text-blue-400 hover:opacity-80"
-                        >
-                          Sign in
-                        </Link>
-                      </p>
-                    )}
-                  </div>
+                  <Input
+                    disabled={disabledFormField}
+                    placeholder="Email"
+                    value={formData.email}
+                    name="email"
+                    onChange={changeInputHandler}
+                    className="rounded-xl bg-gray-100 p-3"
+                  />
+                  <Input
+                    disabled={disabledFormField}
+                    placeholder="Password"
+                    withHideIcon
+                    value={formData.password}
+                    type="password"
+                    name="password"
+                    onChange={changeInputHandler}
+                    className="w-full rounded-xl bg-gray-100 p-3 pr-11"
+                  />
                 </>
               )}
 
               {authPageType === "resetPassword" && (
-                <Link
-                  to={pageRoutes.signIn}
-                  className="mt-3 flex items-center gap-1 font-medium text-blue-400 hover:opacity-80"
-                >
-                  <ChevronLeft size={18} strokeWidth={2} />
-                  <span className="text-sm">Return to sign in page</span>
-                </Link>
+                <>
+                  <Input
+                    placeholder="Verification code"
+                    value={resetPasswordFormData.verificationCode}
+                    onChange={(event) => {
+                      setResetPasswordFormData({
+                        ...resetPasswordFormData,
+                        verificationCode: event.target.value,
+                      });
+                    }}
+                    className="rounded-xl bg-gray-100 p-3"
+                  />
+                  <Input
+                    disabled={disabledFormField}
+                    placeholder="New password"
+                    value={resetPasswordFormData.newPassword}
+                    type="password"
+                    name="newPassword"
+                    onChange={(event) => {
+                      setResetPasswordFormData({
+                        ...resetPasswordFormData,
+                        newPassword: event.target.value,
+                      });
+                    }}
+                    className="w-full rounded-xl bg-gray-100 p-3 pr-11"
+                  />
+                </>
               )}
-            </div>
-          </motion.div>
+              <Button
+                type="submit"
+                className="mt-2 rounded-xl"
+                size="lg"
+                loading={disabledFormField}
+                disabled={disabledFormField}
+              >
+                {authPageType === "resetPassword" ? (
+                  <span>Save</span>
+                ) : (
+                  <span>Submit</span>
+                )}
+              </Button>
+            </form>
+
+            {authPageType !== "resetPassword" && (
+              <>
+                <div className="py-3">
+                  <GoogleLogin
+                    onSuccess={googleAuthSuccessHandler}
+                    onError={googleAuthErrorHandler}
+                  />
+                </div>
+
+                <div className="pt-2">
+                  {authPageType === "signIn" && (
+                    <>
+                      <p className="text-sm">
+                        <span>Don't have an account? </span>
+                        <Link
+                          to={`/${pageRoutes.signUp}`}
+                          className="font-medium text-blue-400 hover:opacity-80"
+                        >
+                          Sign up
+                        </Link>
+                      </p>
+                      <button
+                        onClick={() => setIsResetPasswordModalOpen(true)}
+                        className="mt-2 text-sm font-medium text-blue-400 hover:opacity-80"
+                      >
+                        Forgot password
+                      </button>
+                    </>
+                  )}
+
+                  {authPageType === "signUp" && (
+                    <p className="text-sm">
+                      <span>Already have an account? </span>
+                      <Link
+                        to={`/${pageRoutes.signIn}`}
+                        className="font-medium text-blue-400 hover:opacity-80"
+                      >
+                        Sign in
+                      </Link>
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
+
+            {authPageType === "resetPassword" && (
+              <Link
+                to={`/${pageRoutes.signIn}`}
+                className="mt-3 flex items-center gap-1 font-medium text-blue-400 hover:opacity-80"
+              >
+                <ChevronLeft size={18} strokeWidth={2} />
+                <span className="text-sm">Return to sign in page</span>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
