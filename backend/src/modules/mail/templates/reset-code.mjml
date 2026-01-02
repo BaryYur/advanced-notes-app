@@ -1,0 +1,31 @@
+<mjml>
+  <mj-head>
+    <mj-title>Reset password</mj-title>
+    <mj-font
+      name="Inter"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600"
+    />
+  </mj-head>
+
+  <mj-body background-color="#f4f6f8">
+    <mj-wrapper padding="10px 0">
+      <mj-section background-color="#ffffff" padding="20px" border-radius="8px">
+        <mj-column>
+          <mj-text font-size="20px" font-weight="600">
+            🔐 Reset password
+          </mj-text>
+
+          <mj-text color="#555">Use this code to reset your password:</mj-text>
+
+          <mj-text font-size="32px" font-weight="600" letter-spacing="4px">
+            {{ resetCode }}
+          </mj-text>
+
+          <mj-text font-size="12px" color="#999">
+            If you did not make a request, simply ignore this letter.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>
