@@ -49,12 +49,12 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
   useEffect(() => {
     if (isSendingSuccess) {
       onClose();
-      navigate(pageRoutes.resetPassword, {
+      navigate(`/${pageRoutes.resetPassword}`, {
         state: { recoveryEmail: resetPasswordEmail },
       });
       setResetPasswordEmail("");
     }
-  }, [isSendingSuccess, navigate, onClose, resetPasswordEmail]);
+  }, [isSendingSuccess]);
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -81,6 +81,7 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
               type="button"
               variant="destructive"
               className="w-[84px]"
+              disabled={isSendingPending}
               onClick={onClose}
             >
               Cancel

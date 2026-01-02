@@ -38,7 +38,7 @@ const sendResetPasswordCode = async (email: string) => {
 
 const resetPassword = async (
   email: string,
-  verificationCode: string,
+  verificationCode: number,
   newPassword: string,
 ) => {
   await apiClient.post("/auth/reset-password", {

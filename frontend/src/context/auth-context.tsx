@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 type AuthContextType = {
   isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
   user: User | null;
   isUserPending: boolean;
@@ -20,6 +21,7 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
   const { data: userData, isPending: isUserDataPending } = useGetUser();
@@ -33,13 +35,15 @@ export const AuthContextProvider = ({
   useEffect(() => {
     if (userData) {
       setUser(userData);
+      setIsLoggedIn(true);
     }
   }, [userData, isUserDataPending]);
 
   return (
     <AuthContext.Provider
       value={{
-        isLoggedIn: !!user,
+        isLoggedIn,
+        setIsLoggedIn,
         logout,
         user,
         isUserPending: isUserDataPending,
