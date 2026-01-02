@@ -48,9 +48,14 @@ const resetPassword = async (
   });
 };
 
+const logout = async () => {
+  await apiClient.post("/auth/logout");
+};
+
 export const AuthApiService = {
   signIn,
   signUp,
   sendResetPasswordCode,
   resetPassword,
+  logout,
 };
