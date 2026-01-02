@@ -1,10 +1,8 @@
-import React, { useCallback, useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect } from "react";
 
 import { User } from "@/types";
 
-import { useGetUser } from "@/hooks/api";
-
-import Cookies from "js-cookie";
+import { useGetUser, useLogout } from "@/hooks/api";
 
 type AuthContextType = {
   isLoggedIn: boolean;
@@ -25,12 +23,11 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState<User | null>(null);
 
   const { data: userData, isPending: isUserDataPending } = useGetUser();
+  const { mutate: logoutMutation, isSuccess: isLogoutSuccess } = useLogout();
 
-  const logout = useCallback(() => {
-    // setUser(null);
-    // Cookies.remove("accessToken");
-    console.log(Cookies.get("accessToken"));
-  }, []);
+  const logout = () => {
+    logoutMutation();
+  };
 
   useEffect(() => {
     if (userData) {
@@ -38,6 +35,13 @@ export const AuthContextProvider = ({
       setIsLoggedIn(true);
     }
   }, [userData, isUserDataPending]);
+
+  useEffect(() => {
+    if (isLogoutSuccess) {
+      setIsLoggedIn(false);
+      setUser(null);
+    }
+  }, [isLogoutSuccess]);
 
   return (
     <AuthContext.Provider

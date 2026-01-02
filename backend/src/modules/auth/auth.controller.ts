@@ -50,6 +50,15 @@ export class AuthController {
     return { success: true };
   }
 
+  @Post("/logout")
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie("accessToken", {
+      path: "/",
+    });
+
+    return { success: true };
+  }
+
   @Post("/reset-password-code")
   async getResetPasswordCode(@Body() dto: ResetPasswordCodeDto) {
     return this.authService.getResetPasswordCode(dto);
