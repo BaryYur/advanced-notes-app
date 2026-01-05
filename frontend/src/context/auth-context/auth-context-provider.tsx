@@ -1,18 +1,10 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+
+import { AuthContext } from "./auth-context";
 
 import { User } from "@/types";
 
 import { useGetUser, useLogout } from "@/hooks/api";
-
-type AuthContextType = {
-  isLoggedIn: boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  logout: () => void;
-  user: User | null;
-  isUserPending: boolean;
-};
-
-export const AuthContext = createContext({} as AuthContextType);
 
 export const AuthContextProvider = ({
   children,
