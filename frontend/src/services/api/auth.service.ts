@@ -33,7 +33,7 @@ const signUp = async (
 };
 
 const sendResetPasswordCode = async (email: string) => {
-  await apiClient.post("/auth/reset-password-code", { email });
+  await apiClient.post("/auth/reset-password/get-code", { email });
 };
 
 const resetPassword = async (
