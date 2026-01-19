@@ -4,6 +4,7 @@ import { ValidationPipe } from "@nestjs/common";
 
 import { HttpExceptionFilter } from "./common/filters";
 import { SocketIoAdapter } from "./common/utils/socket-adapter";
+import { documentation } from "./common/config";
 
 import { AppModule } from "./app.module";
 
@@ -32,6 +33,8 @@ async function bootstrap() {
     }),
   );
   app.useWebSocketAdapter(new SocketIoAdapter(app));
+
+  documentation(app);
 
   await app.listen(PORT);
 }

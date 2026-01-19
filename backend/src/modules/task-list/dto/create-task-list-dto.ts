@@ -7,6 +7,7 @@ export class CreateTaskListDto {
   @IsString()
   name: string;
 
+  @ApiProperty({ example: "🛒", required: false })
   @IsString()
   @IsOptional()
   emoji?: string;
