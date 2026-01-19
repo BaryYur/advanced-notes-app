@@ -10,6 +10,10 @@ jobs:
   backend-ci:
     name: Backend CI
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://postgres.xtvjvmhweivhonbybxjc:qFW8qmENRzL7zQO5@aws-1-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+      DIRECT_URL: "postgresql://postgres.xtvjvmhweivhonbybxjc:qFW8qmENRzL7zQO5@aws-1-us-east-1.pooler.supabase.com:5432/postgres"
+      JWT_SECRET: "dummy_secret_for_ci"
     steps:
       - uses: actions/checkout@v4
 
