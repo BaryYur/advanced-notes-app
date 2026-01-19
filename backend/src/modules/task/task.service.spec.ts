@@ -7,7 +7,6 @@ import { DatabaseService } from "../database/database.service";
 
 describe("TaskService", () => {
   let service: TaskService;
-  let databaseService: DatabaseService;
 
   const mockDatabaseService = {
     task: {
@@ -33,7 +32,6 @@ describe("TaskService", () => {
     }).compile();
 
     service = module.get<TaskService>(TaskService);
-    databaseService = module.get<DatabaseService>(DatabaseService);
   });
 
   afterEach(() => {

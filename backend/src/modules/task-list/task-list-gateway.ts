@@ -11,8 +11,6 @@ import {
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
 
-import { RequestWithUser } from "../../common/types";
-
 import { TaskListService } from "./task-list.service";
 
 import { WsJwtGuard } from "../auth/ws-jwt-auth.guard";

@@ -9,7 +9,6 @@ jest.mock("mjml", () => jest.fn(() => ({ html: "<html></html>" })));
 
 describe("MailService", () => {
   let service: MailService;
-  let configService: ConfigService;
 
   const mockConfigService = {
     get: jest.fn((key: string) => {
@@ -35,7 +34,6 @@ describe("MailService", () => {
     }).compile();
 
     service = module.get<MailService>(MailService);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   it("should be defined", () => {

@@ -8,8 +8,6 @@ import { WsJwtGuard } from "../auth/ws-jwt-auth.guard";
 
 describe("TaskGateway", () => {
   let gateway: TaskGateway;
-  let taskService: TaskService;
-  let taskListService: TaskListService;
 
   const mockTaskService = {
     create: jest.fn(),
@@ -41,8 +39,6 @@ describe("TaskGateway", () => {
       .compile();
 
     gateway = module.get<TaskGateway>(TaskGateway);
-    taskService = module.get<TaskService>(TaskService);
-    taskListService = module.get<TaskListService>(TaskListService);
     gateway.server = mockServer as any;
   });
 
@@ -69,7 +65,7 @@ describe("TaskGateway", () => {
 
       const result = await gateway.createTaskList(dto);
 
-      expect(taskService.create).toHaveBeenCalledWith(dto);
+      expect(mockTaskService.create).toHaveBeenCalledWith(dto);
       expect(mockServer.emit).toHaveBeenCalledWith("taskCreated", task);
       expect(result).toHaveProperty("event", "userHomeTasks");
     });

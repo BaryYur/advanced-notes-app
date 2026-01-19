@@ -30,7 +30,16 @@ export default tseslint.config(
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["error"],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+      "no-empty": "warn",
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
   prettierConfig,

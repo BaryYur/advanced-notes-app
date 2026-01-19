@@ -136,7 +136,7 @@ export class AuthService {
   }
 
   private sanitizeUser(user: User) {
-    const { password, ...rest } = user;
+    const { password: _, ...rest } = user;
 
     return rest;
   }

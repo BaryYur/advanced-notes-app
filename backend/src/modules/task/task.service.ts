@@ -165,7 +165,7 @@ export class TaskService {
     return tasks;
   }
 
-  async getTodayTasks(userId: string) {}
+  async getTodayTasks(_userId: string) {}
 
   async getCompletedTasks(userId: string) {
     const tasks = await this.database.task.findMany({

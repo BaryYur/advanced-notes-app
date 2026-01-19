@@ -5,7 +5,6 @@ import { UserAuthType } from "@prisma/client";
 
 describe("UserService", () => {
   let service: UserService;
-  let database: DatabaseService;
 
   const mockDatabaseService = {
     user: {
@@ -27,7 +26,6 @@ describe("UserService", () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
-    database = module.get<DatabaseService>(DatabaseService);
   });
 
   it("should be defined", () => {

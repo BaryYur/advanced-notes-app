@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 import * as basicAuth from "express-basic-auth";
 
-import { HeaderAuthKey, HeaderNodeApiKey } from "../constants";
+import { HeaderAuthKey } from "../constants";
 
 export const documentation = (app: INestApplication) => {
   const path = "/api/docs";
