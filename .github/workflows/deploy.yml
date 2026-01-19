@@ -1,0 +1,34 @@
+name: Deployment
+
+on:
+  push:
+    branches: [main, develop]
+
+jobs:
+  docker-build-check:
+    name: Docker Build Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Backend Image (Dry Run)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./backend/Dockerfile
+          push: false
+
+  deploy:
+    name: Deployment
+    needs: [docker-build-check]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Placeholder
+        run: |
+          echo "All checks passed! Docker images are buildable."
+          echo "To enable actual CD, you can add steps here to push to Docker Hub"
+          echo "and trigger a redeploy on your hosting provider."

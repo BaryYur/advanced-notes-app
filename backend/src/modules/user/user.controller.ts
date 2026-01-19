@@ -5,8 +5,7 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from "@nestjs/swagger";
-
-import { RequestWithUser } from "src/common/types";
+import { RequestWithUser } from "../../common/types";
 
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";

@@ -10,7 +10,7 @@ import {
 } from "./dto";
 
 import { AuthService } from "./auth.service";
-import { SuccessResponseDto } from "src/common/dto/success.dto";
+import { SuccessResponseDto } from "../../common/dto/success.dto";
 
 @ApiTags("Authentication")
 @Controller("auth")

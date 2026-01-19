@@ -1,0 +1,43 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  backend-ci:
+    name: Backend CI
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://postgres.xtvjvmhweivhonbybxjc:qFW8qmENRzL7zQO5@aws-1-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+      DIRECT_URL: "postgresql://postgres.xtvjvmhweivhonbybxjc:qFW8qmENRzL7zQO5@aws-1-us-east-1.pooler.supabase.com:5432/postgres"
+      JWT_SECRET: "dummy_secret_for_ci"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: backend
+
+      - name: Run Lint
+        run: npm run lint
+        working-directory: backend
+
+      - name: Run Tests
+        run: npm run test
+        working-directory: backend
+
+      - name: Run Build
+        run: npm run build
+        working-directory: backend

@@ -104,7 +104,7 @@ export class TaskListService {
       });
 
       return { message: "Task list deleted successfully", deletedTaskList };
-    } catch (error) {
+    } catch (_error) {
       throw new ConflictException("Task list not found or deletion failed");
     }
   }
@@ -125,7 +125,7 @@ export class TaskListService {
         //
         // });
       }
-    } catch (error) {
+    } catch (_error) {
       throw new ConflictException("Task list not found or deletion failed");
     }
   }

@@ -1,4 +1,4 @@
-import { NotFoundException, UseGuards } from "@nestjs/common";
+import { UseGuards } from "@nestjs/common";
 
 import {
   WebSocketGateway,
@@ -61,8 +61,8 @@ export class TaskGateway {
   @UseGuards(WsJwtGuard)
   @SubscribeMessage("getListTasks")
   async getListTasks(
-    @MessageBody() taskListId: string,
-    @CurrentWsUser() user: User,
+    @MessageBody() _taskListId: string,
+    @CurrentWsUser() _user: User,
   ) {
     // const tasks = await this.taskService.findByTaskListId(taskListId);
     // const orderedTasks = tasks.sort((a, b) => a.defaultIndex - b.defaultIndex);
@@ -92,7 +92,7 @@ export class TaskGateway {
   @SubscribeMessage("updateTask")
   async updateTask(
     @MessageBody()
-    updateDto: {
+    _updateDto: {
       id: string;
       task: UpdateTaskDto;
     },
@@ -146,7 +146,7 @@ export class TaskGateway {
   @SubscribeMessage("removeTask")
   async removeTask(
     @MessageBody()
-    removeTaskDto: {
+    _removeTaskDto: {
       id: string;
     },
   ) {
