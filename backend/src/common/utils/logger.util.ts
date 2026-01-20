@@ -7,5 +7,5 @@ export function logError(...args: any[]) {
         metadata: args,
       }),
     );
-  } catch (e) {}
+  } catch (_e) {}
 }

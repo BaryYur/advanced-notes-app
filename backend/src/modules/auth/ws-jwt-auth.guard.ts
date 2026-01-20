@@ -39,11 +39,11 @@ export class WsJwtGuard implements CanActivate {
         throw new WsException("User not found");
       }
 
-      const { password, ...rest } = user;
+      const { password: _, ...rest } = user;
       client["user"] = rest;
 
       return true;
-    } catch (err) {
+    } catch (_err) {
       throw new WsException("Unauthorized");
     }
   }
