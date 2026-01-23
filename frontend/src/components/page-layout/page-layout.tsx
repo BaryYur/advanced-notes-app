@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 
 import { AuthContext, TasksContext } from "@/context";
 
 import { ListType } from "@/types";
+
+import { useGetPageTitle } from "@/hooks";
 
 import { ListIcon } from "@/components";
 
@@ -30,6 +32,16 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
 }) => {
   const { user } = useContext(AuthContext);
   const { tasks } = useContext(TasksContext);
+
+  const tabName = useMemo(() => {
+    if (pageType !== ListType.Default) {
+      return pageType.charAt(0).toUpperCase() + pageType.slice(1);
+    }
+
+    return defaultPageData?.name || "";
+  }, [pageType, defaultPageData]);
+
+  useGetPageTitle(tabName);
 
   const formatCurrentDate = () => {
     return format(new Date(), "EEEE MMMM dd");
