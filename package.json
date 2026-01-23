@@ -21,11 +21,11 @@
   "lint-staged": {
     "backend/src/**/*.ts": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix --config backend/eslint.config.mjs"
     ],
     "frontend/src/**/*.{js,jsx,ts,tsx,css,scss}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --config frontend/eslint.config.js --fix"
     ]
   },
   "devDependencies": {

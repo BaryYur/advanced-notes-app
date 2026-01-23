@@ -8,6 +8,8 @@ import { useSignIn, useSignUp, SignUpData, useResetPassword } from "@/hooks";
 
 import { UserAuthType } from "@/types";
 
+import { useGetPageTitle } from "@/hooks";
+
 import { Input, Button, BackgroundWrapper } from "@/components";
 import { ResetPasswordModal } from "./components";
 
@@ -48,6 +50,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
 
   const disabledFormField =
     isSignUpPending || isSignInPending || isResetPasswordPending;
+
+  useGetPageTitle("Advanced notes app");
 
   const changeInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;

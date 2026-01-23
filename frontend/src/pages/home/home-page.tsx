@@ -4,8 +4,6 @@ import { TasksContext } from "@/context";
 
 import { ListType } from "@/types";
 
-import { useGetPageTitle } from "@/hooks";
-
 import {
   BackgroundWrapper,
   PageLayout,
@@ -15,8 +13,6 @@ import {
 
 export const HomePage = () => {
   const { tasks, handleFetchTasks } = useContext(TasksContext);
-
-  useGetPageTitle("Home");
 
   return (
     <>
