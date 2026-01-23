@@ -110,5 +110,3 @@ npm run dev -w frontend
 | `npm run lint`       | Runs ESLint across the whole monorepo                   |
 | `npm run type-check` | Runs TypeScript type-checking across the whole monorepo |
 | `npm run format`     | Formats the entire codebase with Prettier               |
-
----
