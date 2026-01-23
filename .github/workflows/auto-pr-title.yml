@@ -1,0 +1,43 @@
+name: Auto Rename PR Title
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  rename-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync PR Title with Last Commit
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            if (commits.length === 0) return;
+
+            const firstCommitMessage = commits[0].commit.message.split('\n')[0];
+
+            const conventionalPattern = /^(fix|chore|feat|docs|test|refactor|style|perf|ci|build)(\(.*\))?: .+ \([A-Z0-9]+-[0-9]+\)$/;
+
+            const currentTitle = context.payload.pull_request.title;
+
+            // If PR title is invalid but the FIRST commit is valid, use the commit title
+            if (!conventionalPattern.test(currentTitle) && conventionalPattern.test(firstCommitMessage)) {
+              console.log(`Renaming PR from "${currentTitle}" to "${firstCommitMessage}"`);
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                title: firstCommitMessage,
+              });
+            } else {
+              console.log('PR title is already valid or first commit message doesn't match standard.');
+            }
