@@ -12,10 +12,29 @@
   "scripts": {
     "dev": "concurrently \"npm run start:dev -w backend\" \"npm run dev -w frontend\"",
     "build": "npm run build -w backend && npm run build -w frontend",
+    "type-check": "npm run type-check -w backend && npm run type-check -w frontend",
     "start": "concurrently \"npm run start -w backend\" \"npm run start -w frontend\"",
-    "format": "npm run format -w backend && npm run format -w frontend"
+    "format": "npm run format -w backend && npm run format -w frontend",
+    "lint": "npm run lint -w backend && npm run lint -w frontend",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "backend/src/**/*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "frontend/src/**/*.{js,jsx,ts,tsx,css,scss}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "concurrently": "^8.2.2",
+    "lint-staged": "^16.2.7"
+  },
+  "dependencies": {
+    "husky": "^9.1.7"
   }
 }
