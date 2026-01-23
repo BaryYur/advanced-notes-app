@@ -39,5 +39,5 @@ jobs:
                 title: firstCommitMessage,
               });
             } else {
-              console.log('PR title is already valid or first commit message doesn't match standard.');
+              console.log("PR title is already valid or first commit message doesn't match standard.");
             }
