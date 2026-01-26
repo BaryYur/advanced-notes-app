@@ -5,9 +5,11 @@ import { MainRouter } from "@/router/main-router";
 
 import { MainLayout } from "@/components";
 
-import { AuthPage } from "@/pages";
+import { AuthPage, NotFoundPage } from "@/pages";
 
 import { AuthContext } from "@/context";
+
+import { pageRoutes } from "@/config";
 
 import { Toaster } from "react-hot-toast";
 
@@ -20,23 +22,33 @@ export const App = () => {
 
       {!isLoggedIn ? (
         <Routes>
-          <Route path="/sign-in" element={<AuthPage authPageType="signIn" />} />
-          <Route path="/sign-up" element={<AuthPage authPageType="signUp" />} />
           <Route
-            path="/reset-password"
+            path={`/${pageRoutes.signIn}`}
+            element={<AuthPage authPageType="signIn" />}
+          />
+          <Route
+            path={`/${pageRoutes.signUp}`}
+            element={<AuthPage authPageType="signUp" />}
+          />
+          <Route
+            path={`/${pageRoutes.resetPassword}`}
             element={<AuthPage authPageType="resetPassword" />}
           />
-          <Route path="/*" element={<Navigate to="/sign-in" />} />
+          <Route
+            path="/*"
+            element={<Navigate to={`/${pageRoutes.signIn}`} />}
+          />
         </Routes>
       ) : (
-        <>
-          <MainLayout>
-            <Routes>
-              <Route path="/app/*" element={<MainRouter />} />
-              <Route path="/*" element={<Navigate to="/app/home" />} />
-            </Routes>
-          </MainLayout>
-        </>
+        <MainLayout>
+          <Routes>
+            <Route
+              path={`/${pageRoutes.app.index}/*`}
+              element={<MainRouter />}
+            />
+            <Route path={pageRoutes.notFound} element={<NotFoundPage />} />
+          </Routes>
+        </MainLayout>
       )}
     </>
   );

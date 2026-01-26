@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,11 +10,16 @@ import { UserAuthType } from "@/types";
 
 import { AuthApiService } from "@/services";
 
-import toast from "react-hot-toast";
+import { AuthContext } from "@/context";
+
 import { handleToastError } from "@/errors";
 
+import toast from "react-hot-toast";
+
 export const useSignIn = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { setAuthData } = useContext(AuthContext);
 
   const { ...mutationProps } = useMutation({
     mutationFn: (data: {
@@ -23,7 +30,9 @@ export const useSignIn = () => {
     onSuccess: () => {
       toast.success("Successfully logged in");
 
+      setAuthData();
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
     },
     onError: (error) => {
       handleToastError(error);
@@ -43,7 +52,9 @@ export type SignUpData = {
 type ExtendedSignUpData = SignUpData & Record<"authType", UserAuthType>;
 
 export const useSignUp = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { setAuthData } = useContext(AuthContext);
 
   const { ...mutationProps } = useMutation({
     mutationFn: (data: ExtendedSignUpData) =>
@@ -57,19 +68,13 @@ export const useSignUp = () => {
     onSuccess: () => {
       toast.success("Successfully logged in");
 
+      setAuthData();
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
     },
     onError: (error) => {
       handleToastError(error);
     },
-  });
-
-  return mutationProps;
-};
-
-export const useLogout = () => {
-  const { ...mutationProps } = useMutation({
-    mutationFn: () => AuthApiService.logout(),
   });
 
   return mutationProps;

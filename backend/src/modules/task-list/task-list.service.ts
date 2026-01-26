@@ -40,7 +40,7 @@ export class TaskListService {
     return taskList;
   }
 
-  async findTaskList(userId: string, name: string): Promise<TaskList> {
+  async findTaskList(userId: string, name: string): Promise<TaskList | null> {
     const taskList = await this.database.taskList.findFirst({
       where: {
         userId,
@@ -48,9 +48,9 @@ export class TaskListService {
       },
     });
 
-    if (!taskList) {
-      throw new NotFoundException("Task list not found");
-    }
+    // if (!taskList) {
+    //   throw new NotFoundException("Task list not found");
+    // }
 
     return taskList;
   }

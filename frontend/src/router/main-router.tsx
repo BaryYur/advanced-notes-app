@@ -1,10 +1,11 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import {
   HomePage,
   TaskListPage,
   TodayTasksPage,
   CompletedTasksPage,
+  NotFoundPage,
 } from "@/pages";
 
 import { pageRoutes } from "@/config";
@@ -21,8 +22,8 @@ export const MainRouter = () => {
         />
         <Route path="/:name" element={<TaskListPage />} />
         <Route
-          path={pageRoutes.notFound}
-          element={<Navigate to={pageRoutes.app.home} />}
+          path={pageRoutes.notFound} // or not include name from users list
+          element={<NotFoundPage />}
         />
       </Routes>
     </>
