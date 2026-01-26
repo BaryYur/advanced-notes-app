@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { Task } from "@/types";
 
 import { AuthContext } from "@/context";
 
 import { TaskList, ListType } from "@/types";
+
+import { pageRoutes } from "@/config";
 
 import {
   PageLayout,
@@ -19,6 +21,7 @@ import { socket } from "@/lib";
 
 export const TaskListPage = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
   const [taskList, setTaskList] = useState<TaskList | null>(null);
@@ -29,6 +32,10 @@ export const TaskListPage = () => {
       socket.emit("getTaskList", { userId: user.id, name: params.name });
 
       const handleGetTaskList = (data: TaskList) => {
+        if (!data) {
+          navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
+        }
+
         setTaskList(data);
       };
 
@@ -74,21 +81,23 @@ export const TaskListPage = () => {
   return (
     <>
       {taskList && (
-        <PageLayout
-          pageType={ListType.Default}
-          defaultPageData={{
-            id: taskList.id,
-            name: taskList.name,
-            color: taskList.color,
-            emoji: taskList?.emoji,
-          }}
-        >
-          <TaskField listType={ListType.Default} values={{ taskList }} />
-          <TasksList tasks={tasks} setTasks={(tasks) => setTasks(tasks)} />
-        </PageLayout>
-      )}
+        <>
+          <PageLayout
+            pageType={ListType.Default}
+            defaultPageData={{
+              id: taskList.id,
+              name: taskList.name,
+              color: taskList.color,
+              emoji: taskList?.emoji,
+            }}
+          >
+            <TaskField listType={ListType.Default} values={{ taskList }} />
+            <TasksList tasks={tasks} setTasks={(tasks) => setTasks(tasks)} />
+          </PageLayout>
 
-      <BackgroundWrapper currentColor={taskList?.color} />
+          <BackgroundWrapper currentColor={taskList?.color} />
+        </>
+      )}
     </>
   );
 };

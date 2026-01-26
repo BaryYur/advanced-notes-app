@@ -7,7 +7,10 @@ type AuthContextType = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
   user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isUserPending: boolean;
+  clearAuthData: () => void;
+  setAuthData: () => void;
 };
 
 export const AuthContext = createContext({} as AuthContextType);
