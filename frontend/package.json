@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production') { try { require('husky').install() } catch (e) {} }\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
