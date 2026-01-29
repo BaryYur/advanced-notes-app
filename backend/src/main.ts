@@ -7,7 +7,7 @@ import { documentation } from "./common/config";
 
 import { AppModule } from "./app.module";
 
-import * as cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 
 async function bootstrap() {
   const configService = new ConfigService();
