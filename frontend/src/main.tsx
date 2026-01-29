@@ -3,7 +3,11 @@ import { createRoot } from "react-dom/client";
 
 import { App } from "./App.tsx";
 
-import { ThemeProvider, AuthContextProvider, TaskListsContextProvider } from "@/context";
+import {
+  ThemeProvider,
+  AuthContextProvider,
+  TaskListContextProvider,
+} from "@/context";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -24,9 +28,9 @@ createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
           <ThemeProvider defaultTheme="light" storageKey="theme">
             <AuthContextProvider>
-              <TaskListsContextProvider>
+              <TaskListContextProvider>
                 <App />
-              </TaskListsContextProvider>
+              </TaskListContextProvider>
             </AuthContextProvider>
           </ThemeProvider>
         </BrowserRouter>

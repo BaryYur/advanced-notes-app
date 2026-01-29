@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { TaskListApiServices } from "@/services";
+import { TaskListSupabaseService } from "@/services";
 
 import { ListType } from "@/types";
 
@@ -27,12 +27,12 @@ export const NavBarLinkActionDropdown: React.FC<
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleDeleteAllTasks = (
+  const handleDeleteAllTasks = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.stopPropagation();
 
-    TaskListApiServices.deleteAllTasks({
+    await TaskListSupabaseService.deleteAllTasks({
       taskListId: taskList?.id,
       taskListType: navBarLinkType,
     });
@@ -46,7 +46,7 @@ export const NavBarLinkActionDropdown: React.FC<
     onStartEdit?.();
   };
 
-  const handleDeleteTaskList = (
+  const handleDeleteTaskList = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.stopPropagation();
@@ -59,7 +59,7 @@ export const NavBarLinkActionDropdown: React.FC<
         navigate(pageRoutes.app.home);
       }
 
-      TaskListApiServices.deleteTaskList(taskList.id);
+      await TaskListSupabaseService.deleteTaskList(taskList.id);
     }
   };
 

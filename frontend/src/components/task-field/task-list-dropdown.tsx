@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+
+import { TaskListContext } from "@/context";
 
 import { TaskList } from "@/types";
-
-import { TaskListsContext } from "@/context";
 
 import { ListIcon } from "@/components";
 
@@ -30,7 +30,7 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
   currentTaskList,
   onSelectList,
 }) => {
-  const { taskLists } = useContext(TaskListsContext);
+  const { taskLists } = useContext(TaskListContext);
 
   const defaultList = {
     id: "",
@@ -39,7 +39,8 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
   };
 
   const [lists, setLists] = useState<ListType[]>([]);
-  const [selectedTaskList, setSelectedTaskList] = useState<ListType>(defaultList);
+  const [selectedTaskList, setSelectedTaskList] =
+    useState<ListType>(defaultList);
 
   const handleSelectList = (value: ListType) => {
     setSelectedTaskList(value);
@@ -81,7 +82,10 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
         className="relative flex items-center gap-1 rounded-md bg-gray-100 px-2 py-1.5"
       >
         <div className="flex items-center gap-2">
-          <ListIcon color={selectedTaskList.color} emoji={selectedTaskList.emoji} />
+          <ListIcon
+            color={selectedTaskList.color}
+            emoji={selectedTaskList.emoji}
+          />
 
           <span className="whitespace-nowrap text-sm">
             {selectedTaskList?.name}

@@ -5,20 +5,18 @@ import { ListType, Task } from "@/types";
 import { TaskListItem } from "./task-list-item";
 import { SortableList } from "./sortable-list";
 
-import { socket } from "@/lib";
-
 interface TasksListProps {
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
 }
 
 export const TasksList: React.FC<TasksListProps> = ({ tasks, setTasks }) => {
-  const handleIndexChanges = (listType: ListType, items: Task[]) => {
+  const handleIndexChanges = (_listType: ListType, items: Task[]) => {
     setTasks(items);
 
-    const itemsWithIndex = items.map((item, index) => ({ ...item, index }));
+    // const itemsWithIndex = items.map((item, index) => ({ ...item, index }));
 
-    socket.emit("updateTaskIndexes", { listType, tasks: itemsWithIndex });
+    // socket.emit("updateTaskIndexes", { listType, tasks: itemsWithIndex });
   };
 
   return (

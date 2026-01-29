@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from "react";
 
-import { AuthContext, TasksContext } from "@/context";
+import { AuthContext } from "@/context";
 
 import { ListType } from "@/types";
 
@@ -31,7 +31,6 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   children,
 }) => {
   const { user } = useContext(AuthContext);
-  const { tasks } = useContext(TasksContext);
 
   const tabName = useMemo(() => {
     if (pageType !== ListType.Default) {
@@ -54,7 +53,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
           Good {getCurrentDayPeriod()} {user?.firstName},
         </h1>
         <p className="text-lg font-medium text-zinc-400/80">
-          It's {formatCurrentDate()} - {tasks[ListType.Home].length} tasks
+          It's {formatCurrentDate()} - {0} tasks
         </p>
       </>
     ),

@@ -6,10 +6,6 @@ import { ListType, TaskList } from "@/types";
 
 import { useEnterKeys, useOutsideClick } from "@/hooks";
 
-import { TaskApiService } from "@/services";
-
-import { socket } from "@/lib";
-
 import { DatePickerDropdown } from "./date-picker-dropdown";
 import { TaskListDropdown } from "./task-list-dropdown";
 
@@ -83,22 +79,24 @@ export const TaskField: React.FC<TaskFieldProps> = ({ listType, values }) => {
 
     if (!user) return;
 
-    TaskApiService.createTask({
-      taskListType: listType,
-      task: {
-        userId: user.id,
-        title: task.title,
-        taskListId: task.listId !== "" ? task.listId : null,
-        date: task.date,
-      },
-    });
+    console.log(listType);
 
-    socket.once("taskCreated", () => {
-      setTask({
-        ...task,
-        title: "",
-      });
-    });
+    // TaskApiService.createTask({
+    //   taskListType: listType,
+    //   task: {
+    //     userId: user.id,
+    //     title: task.title,
+    //     taskListId: task.listId !== "" ? task.listId : null,
+    //     date: task.date,
+    //   },
+    // });
+
+    // socket.once("taskCreated", () => {
+    //   setTask({
+    //     ...task,
+    //     title: "",
+    //   });
+    // });
   };
 
   useEffect(() => {
