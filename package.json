@@ -32,8 +32,10 @@
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
     "concurrently": "^8.2.2",
-    "lint-staged": "^16.2.7",
-    "husky": "^9.1.7"
+    "lint-staged": "^16.2.7"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@supabase/supabase-js": "^2.93.1",
+    "husky": "^9.1.7"
+  }
 }

@@ -47,6 +47,14 @@ export const App = () => {
               element={<MainRouter />}
             />
             <Route path={pageRoutes.notFound} element={<NotFoundPage />} />
+            <Route
+              path="/"
+              element={
+                <Navigate
+                  to={`/${pageRoutes.app.index}/${pageRoutes.app.home}`}
+                />
+              }
+            />
           </Routes>
         </MainLayout>
       )}

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -8,7 +8,12 @@ import { AuthContext } from "@/context";
 
 import { TaskList, ListType } from "@/types";
 
+import { TaskListSupabaseService } from "@/services";
+
 import { pageRoutes } from "@/config";
+
+import { supabase } from "@/supabase";
+import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
 import {
   PageLayout,
@@ -16,8 +21,6 @@ import {
   TaskField,
   TasksList,
 } from "@/components";
-
-import { socket } from "@/lib";
 
 export const TaskListPage = () => {
   const params = useParams();
@@ -27,56 +30,62 @@ export const TaskListPage = () => {
   const [taskList, setTaskList] = useState<TaskList | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    if (user) {
-      socket.emit("getTaskList", { userId: user.id, name: params.name });
+  const fetchTaskList = useCallback(async () => {
+    if (params.name && user) {
+      const taskListData = await TaskListSupabaseService.getTaskList({
+        name: params.name,
+        userId: user.id,
+      });
 
-      const handleGetTaskList = (data: TaskList) => {
-        if (!data) {
-          navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
-        }
+      if (!taskListData) {
+        navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
+        return;
+      }
 
-        setTaskList(data);
-      };
-
-      socket.on("taskListFetched", handleGetTaskList);
-
-      return () => {
-        socket.off("taskListFetched");
-      };
+      setTaskList(taskListData);
     }
-  }, [user, params]);
+  }, [params.name, user, navigate]);
 
   useEffect(() => {
-    if (taskList) {
-      socket.emit("getListTasks", taskList.id);
+    fetchTaskList();
+  }, [fetchTaskList]);
 
-      const handleGetTasks = (tasksData: Task[]) => {
-        setTasks(tasksData);
-      };
+  useEffect(() => {
+    if (!taskList?.id) return;
 
-      const handleCreateTask = (taskData: Task) => {
-        if (taskData.taskListId === taskList.id) {
-          setTasks((prevTasks) => [taskData, ...prevTasks]);
-        }
-      };
+    const channel = supabase
+      .channel(`task_list_id_${taskList.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "task_list",
+          filter: `id=eq.${taskList.id}`,
+        },
+        (payload: RealtimePostgresChangesPayload<TaskList>) => {
+          if (
+            payload.eventType === "INSERT" ||
+            payload.eventType === "UPDATE"
+          ) {
+            if (payload.new.name !== params.name) {
+              navigate(`/${pageRoutes.app.index}/${payload.new.name}`);
+            }
 
-      // const handleUpdateTask = (task: Partial<Task>) => {
-      //   console.log("update", task);
-      //   socket.emit("updateTaskList", task);
-      // }
+            setTaskList(payload.new);
+          } else if (payload.eventType === "DELETE") {
+            if (params.name === taskList.name) {
+              navigate(`/${pageRoutes.app.index}/${pageRoutes.app.home}`);
+            }
+          }
+        },
+      )
+      .subscribe();
 
-      socket.on("userListTasks", handleGetTasks);
-      socket.on("taskCreated", handleCreateTask);
-      // socket.on("taskUpdated", handleUpdateTask());
-
-      return () => {
-        socket.off("userListTasks", handleGetTasks);
-        socket.off("taskCreated");
-        socket.off("taskRemoved");
-      };
-    }
-  }, [taskList]);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [navigate, taskList?.id, params.name]);
 
   return (
     <>

@@ -4,7 +4,7 @@ import { TaskList } from "@/types";
 
 import { useOutsideClick } from "@/hooks";
 
-import { TaskApiService } from "@/services";
+// import { TaskApiService } from "@/services";
 
 import { Checkbox, ListIcon } from "@/components";
 import { SortableList } from "./sortable-list";
@@ -49,12 +49,12 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
   const handleCompleteTask = (event: React.FormEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
-    TaskApiService.updateTask({
-      id,
-      task: {
-        completed: !completed,
-      },
-    });
+    // TaskApiService.updateTask({
+    //   id,
+    //   task: {
+    //     completed: !completed,
+    //   },
+    // });
   };
 
   const isExpired = date ? isBefore(date, new Date()) : false;

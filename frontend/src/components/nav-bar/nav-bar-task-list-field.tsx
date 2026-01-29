@@ -1,18 +1,16 @@
 import React, { useContext, useRef, useState } from "react";
 
-import { AuthContext, TaskListsContext } from "@/context";
+import { AuthContext, TaskListContext } from "@/context";
 
 import { useEnterKeys, useOutsideClick } from "@/hooks";
 
-import { TaskListApiServices } from "@/services";
+import { TaskListSupabaseService } from "@/services";
 
 import { TaskList } from "@/types";
 
 import { TaskListIconPicker } from "@/components";
 
 import { COLORS } from "@/lib/data";
-
-import { socket } from "@/lib";
 
 import { Command } from "lucide-react";
 
@@ -34,7 +32,7 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
   taskListData,
 }) => {
   const { user } = useContext(AuthContext);
-  const { checkIsTaskListNameAvailable } = useContext(TaskListsContext);
+  const { checkIsTaskListNameAvailable } = useContext(TaskListContext);
 
   const [formData, setFormData] = useState({
     taskListName: taskListData?.name ?? "",
@@ -78,7 +76,7 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
     dependencies: [formData, isTaskListIconPickedOpen],
   });
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (formData.taskListName === "") {
@@ -94,19 +92,19 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
         return;
       }
 
-      TaskListApiServices.createTaskList({
-        userId: user.id,
+      const newList = await TaskListSupabaseService.createTaskList({
         name: formData.taskListName.trim(),
+        userId: user.id,
         color: formData.selectedColor.trim(),
       });
 
-      socket.once("taskListCreated", () => {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
+      if (newList) {
+        setFormData({
+          ...formData,
           taskListName: "",
           isActive: false,
-        }));
-      });
+        });
+      }
     }
 
     if (action === "update" && taskListData) {
@@ -117,10 +115,11 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
         return;
       }
 
-      TaskListApiServices.updateTaskList(taskListData.id, {
+      await TaskListSupabaseService.updateTaskList(taskListData.id, {
         name: formData.taskListName.trim(),
         color: formData.selectedColor.trim(),
       });
+
       onUpdateAction?.();
     }
   };

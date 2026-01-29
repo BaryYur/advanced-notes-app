@@ -56,7 +56,7 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
   return (
     <li ref={elementRef}>
       <NavLink
-        to={`${pageRoutes.app.index}/${title}`}
+        to={`/${pageRoutes.app.index}/${title}`}
         className={({ isActive }) =>
           `${isActive && "bg-gray-100/50"} group z-10 flex items-center justify-between rounded-xl px-2 py-1.5`
         }

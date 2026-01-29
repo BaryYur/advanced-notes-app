@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { TaskApiService } from "@/services";
+// import { TaskApiService } from "@/services";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
@@ -20,7 +20,8 @@ export const TaskListItemDropdown: React.FC<TaskListItemDropdownProps> = ({
   const handleDuplicateTask = () => {};
 
   const handleDeleteTask = () => {
-    TaskApiService.deleteTask({ id: taskId });
+    console.log(taskId);
+    //   TaskApiService.deleteTask({ id: taskId });
   };
 
   const actions = useMemo(() => {
