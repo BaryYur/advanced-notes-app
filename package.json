@@ -16,7 +16,7 @@
     "start": "concurrently \"npm run start -w backend\" \"npm run start -w frontend\"",
     "format": "npm run format -w backend && npm run format -w frontend",
     "lint": "npm run lint -w backend && npm run lint -w frontend",
-    "prepare": "husky"
+    "prepare": "node -e \"if (!process.env.CI && process.env.NODE_ENV !== 'production') process.exit(require('child_process').spawnSync('husky', {shell:true, stdio:'inherit'}).status)\""
   },
   "lint-staged": {
     "backend/src/**/*.ts": [
