@@ -1,7 +1,7 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
-import * as basicAuth from "express-basic-auth";
+import basicAuth from "express-basic-auth";
 
 import { HeaderAuthKey } from "../constants";
 
