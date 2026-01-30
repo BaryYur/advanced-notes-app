@@ -4,10 +4,13 @@ import { supabase } from "@/supabase";
 
 import { handleApiError } from "@/errors";
 
-const getTaskLists = async (): Promise<TaskList[] | undefined> => {
+const getTaskLists = async (
+  userId: string,
+): Promise<TaskList[] | undefined> => {
   const { data, error } = await supabase
     .from("task_list")
     .select("*")
+    .eq("userId", userId)
     .returns<TaskList[]>();
 
   if (error) {

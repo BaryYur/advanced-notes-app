@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
 import { TaskListContext } from "./task-list-context";
+import { AuthContext } from "@/context";
 
 import { TaskList } from "@/types";
 
@@ -15,12 +16,16 @@ export const TaskListContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { user } = useContext(AuthContext);
+
   const [taskLists, setTaskLists] = useState<TaskList[]>([]);
 
   const getTaskLists = async () => {
-    const taskLists = await TaskListSupabaseService.getTaskLists();
+    if (user) {
+      const taskLists = await TaskListSupabaseService.getTaskLists(user.id);
 
-    setTaskLists(taskLists || []);
+      setTaskLists(taskLists || []);
+    }
   };
 
   const checkIsTaskListNameAvailable = (listId: string, name: string) => {
@@ -31,6 +36,8 @@ export const TaskListContextProvider = ({
   };
 
   useEffect(() => {
+    if (!user) return;
+
     getTaskLists();
 
     const channel = supabase
@@ -41,6 +48,7 @@ export const TaskListContextProvider = ({
           event: "*",
           schema: "public",
           table: "task_list",
+          filter: `userId=eq.${user.id}`,
         },
         (payload: RealtimePostgresChangesPayload<TaskList>) => {
           if (payload.eventType === "INSERT") {
@@ -63,7 +71,7 @@ export const TaskListContextProvider = ({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [user]);
 
   return (
     <TaskListContext.Provider
