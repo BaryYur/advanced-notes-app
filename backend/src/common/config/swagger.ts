@@ -1,27 +1,27 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
-import basicAuth from "express-basic-auth";
+// import basicAuth from "express-basic-auth";
 
 import { HeaderAuthKey } from "../constants";
 
 export const documentation = (app: INestApplication) => {
   const path = "/api/docs";
-  const user = process.env.SWAGGER_USER;
-  const password = process.env.SWAGGER_PASSWORD;
+  // const user = process.env.SWAGGER_USER;
+  // const password = process.env.SWAGGER_PASSWORD;
 
-  if (process.env.NODE_ENV === "production" && user) {
-    app.use(
-      [path],
-      basicAuth({
-        users: {
-          [user]: password || "",
-        },
-        challenge: true,
-        unauthorizedResponse: "Unauthorized",
-      }),
-    );
-  }
+  // if (process.env.NODE_ENV === "production" && user) {
+  //   app.use(
+  //     [path],
+  //     basicAuth({
+  //       users: {
+  //         [user]: password || "",
+  //       },
+  //       challenge: true,
+  //       unauthorizedResponse: "Unauthorized",
+  //     }),
+  //   );
+  // }
 
   const options = new DocumentBuilder()
     .setTitle("Advanced Notes App API")
