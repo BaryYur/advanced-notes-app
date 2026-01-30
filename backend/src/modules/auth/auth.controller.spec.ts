@@ -89,6 +89,8 @@ describe("AuthController", () => {
 
       expect(mockResponse.clearCookie).toHaveBeenCalledWith("accessToken", {
         path: "/",
+        secure: true,
+        sameSite: "lax",
       });
       expect(result).toEqual({ success: true });
     });
