@@ -4,6 +4,7 @@ import { ListType, Task } from "@/types";
 
 import { TaskListItem } from "./task-list-item";
 import { SortableList } from "./sortable-list";
+import { TasksEmptyState } from "./tasks-empty-state";
 
 interface TasksListProps {
   tasks: Task[];
@@ -39,6 +40,8 @@ export const TasksList: React.FC<TasksListProps> = ({ tasks, setTasks }) => {
           </SortableList.Item>
         )}
       />
+
+      {tasks.length === 0 && <TasksEmptyState />}
     </div>
   );
 };
