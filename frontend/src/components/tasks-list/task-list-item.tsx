@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { TaskList } from "@/types";
 
@@ -10,12 +10,12 @@ import { Checkbox, ListIcon } from "@/components";
 import { SortableList } from "./sortable-list";
 import { TaskListItemDropdown } from "./task-list-item-dropdown";
 
-import { motion } from "framer-motion";
-
 import { AlignLeft } from "lucide-react";
 
 import { format, isBefore } from "date-fns";
 import { enUS } from "date-fns/locale";
+
+import { motion } from "framer-motion";
 
 interface TaskListItemProps {
   id: string;
@@ -46,10 +46,13 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
 
   // const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isCompleting, setIsCompleting] = useState(false);
+
   const handleCompleteTask = async (
     event: React.FormEvent<HTMLButtonElement>,
   ) => {
     event.stopPropagation();
+    setIsCompleting(true);
 
     await TaskSupabaseService.updateTask(id, {
       completed: !completed,
@@ -73,15 +76,23 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
         <div>
           <div className="relative z-30 flex items-center gap-3">
             <Checkbox
-              checked={completed}
+              checked={completed || isCompleting}
               onClick={handleCompleteTask}
               className="h-[18px] w-[18px] rounded-md border-transparent bg-gray-200 shadow-none"
             />
-            <span
-              className={`${completed && "text-zinc-600 line-through"} text-sm`}
-            >
-              {title}
-            </span>
+            <div className="relative flex items-center">
+              <span
+                className={`${(completed || isCompleting) && "text-zinc-500"} relative z-10 text-sm transition-colors duration-300`}
+              >
+                {title}
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: completed || isCompleting ? "100%" : 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="absolute left-0 top-1/2 h-[1.5px] -translate-y-1/2 bg-zinc-500"
+                />
+              </span>
+            </div>
           </div>
         </div>
 
