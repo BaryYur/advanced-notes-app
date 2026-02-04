@@ -1,3 +1,7 @@
+import { useContext } from "react";
+
+import { TaskContext } from "@/context";
+
 import { ListType } from "@/types";
 
 import {
@@ -8,11 +12,16 @@ import {
 } from "@/components";
 
 export const HomePage = () => {
+  const { tasks } = useContext(TaskContext);
+
   return (
     <>
       <PageLayout pageType={ListType.Home}>
         <TaskField listType={ListType.Home} />
-        <TasksList tasks={[]} setTasks={(tasks) => console.log(tasks)} />
+        <TasksList
+          tasks={tasks[ListType.Home]}
+          setTasks={(tasks) => console.log(tasks)}
+        />
       </PageLayout>
 
       <BackgroundWrapper />

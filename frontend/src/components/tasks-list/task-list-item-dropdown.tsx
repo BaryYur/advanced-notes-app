@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-// import { TaskApiService } from "@/services";
+import { TaskSupabaseService } from "@/services";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
@@ -19,9 +19,8 @@ export const TaskListItemDropdown: React.FC<TaskListItemDropdownProps> = ({
 
   const handleDuplicateTask = () => {};
 
-  const handleDeleteTask = () => {
-    console.log(taskId);
-    //   TaskApiService.deleteTask({ id: taskId });
+  const handleDeleteTask = async () => {
+    await TaskSupabaseService.deleteTask(taskId);
   };
 
   const actions = useMemo(() => {

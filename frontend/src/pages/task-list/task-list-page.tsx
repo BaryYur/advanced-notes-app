@@ -2,9 +2,7 @@ import { useContext, useEffect, useState, useCallback } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
-import { Task } from "@/types";
-
-import { AuthContext } from "@/context";
+import { AuthContext, TaskContext } from "@/context";
 
 import { TaskList, ListType } from "@/types";
 
@@ -26,9 +24,9 @@ export const TaskListPage = () => {
   const params = useParams();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const { tasks } = useContext(TaskContext);
 
   const [taskList, setTaskList] = useState<TaskList | null>(null);
-  const [tasks, setTasks] = useState<Task[]>([]);
 
   const fetchTaskList = useCallback(async () => {
     if (params.name && user) {
@@ -101,7 +99,10 @@ export const TaskListPage = () => {
             }}
           >
             <TaskField listType={ListType.Default} values={{ taskList }} />
-            <TasksList tasks={tasks} setTasks={(tasks) => setTasks(tasks)} />
+            <TasksList
+              tasks={tasks[taskList.name] ?? []}
+              setTasks={(tasks) => console.log(tasks)}
+            />
           </PageLayout>
 
           <BackgroundWrapper currentColor={taskList?.color} />
