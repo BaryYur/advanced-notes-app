@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { AuthContext, TaskListContext } from "@/context";
+import { AuthContext, TaskListContext, TaskContext } from "@/context";
 
 import { ListType } from "@/types";
 
@@ -12,6 +12,7 @@ import { NavBarUserDropdown } from "./nav-bar-user-dropdown";
 export const NavBar = () => {
   const { isUserPending } = useContext(AuthContext);
   const { taskLists } = useContext(TaskListContext);
+  const { tasks } = useContext(TaskContext);
 
   return (
     <div className="fixed bottom-2.5 left-2.5 top-2.5 z-40 flex h-[calc(100%-20px)] w-[calc(100%-20px)] flex-col justify-between rounded-3xl bg-white p-9 shadow transition-all sm:w-[345px]">
@@ -34,21 +35,21 @@ export const NavBar = () => {
                 title="home"
                 linkType={ListType.Home}
                 color=""
-                tasksCounter={0}
+                tasksCounter={tasks[ListType.Home]?.length ?? 0}
               />
               <NavBarLink
                 taskListId=""
                 title="today"
                 linkType={ListType.Today}
                 color=""
-                tasksCounter={0}
+                tasksCounter={tasks[ListType.Today]?.length ?? 0}
               />
               <NavBarLink
                 taskListId=""
                 title="completed"
                 linkType={ListType.Completed}
                 color=""
-                tasksCounter={0}
+                tasksCounter={tasks[ListType.Completed]?.length ?? 0}
               />
 
               {taskLists.map((taskList) => (
@@ -59,7 +60,7 @@ export const NavBar = () => {
                   linkType={ListType.Default}
                   color={taskList.color}
                   emoji={taskList?.emoji}
-                  tasksCounter={taskList.tasksCounter}
+                  tasksCounter={tasks[taskList.name]?.length ?? 0}
                 />
               ))}
             </ul>

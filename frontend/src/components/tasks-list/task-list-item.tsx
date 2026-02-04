@@ -4,7 +4,7 @@ import { TaskList } from "@/types";
 
 import { useOutsideClick } from "@/hooks";
 
-// import { TaskApiService } from "@/services";
+import { TaskSupabaseService } from "@/services";
 
 import { Checkbox, ListIcon } from "@/components";
 import { SortableList } from "./sortable-list";
@@ -46,15 +46,14 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
 
   // const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCompleteTask = (event: React.FormEvent<HTMLButtonElement>) => {
+  const handleCompleteTask = async (
+    event: React.FormEvent<HTMLButtonElement>,
+  ) => {
     event.stopPropagation();
 
-    // TaskApiService.updateTask({
-    //   id,
-    //   task: {
-    //     completed: !completed,
-    //   },
-    // });
+    await TaskSupabaseService.updateTask(id, {
+      completed: !completed,
+    });
   };
 
   const isExpired = date ? isBefore(date, new Date()) : false;
@@ -78,7 +77,9 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
               onClick={handleCompleteTask}
               className="h-[18px] w-[18px] rounded-md border-transparent bg-gray-200 shadow-none"
             />
-            <span className={`${completed && "line-through"} text-sm`}>
+            <span
+              className={`${completed && "text-zinc-600 line-through"} text-sm`}
+            >
               {title}
             </span>
           </div>

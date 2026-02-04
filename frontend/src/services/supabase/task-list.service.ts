@@ -11,6 +11,7 @@ const getTaskLists = async (
     .from("task_list")
     .select("*")
     .eq("userId", userId)
+    .order("createdAt", { ascending: true })
     .returns<TaskList[]>();
 
   if (error) {

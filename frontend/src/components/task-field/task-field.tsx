@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { AuthContext } from "@/context";
 
+import { TaskSupabaseService } from "@/services";
+
 import { ListType, TaskList } from "@/types";
 
 import { useEnterKeys, useOutsideClick } from "@/hooks";
@@ -21,17 +23,17 @@ interface TaskFieldProps {
   };
 }
 
-export const TaskField: React.FC<TaskFieldProps> = ({ listType, values }) => {
+export const TaskField: React.FC<TaskFieldProps> = ({ values }) => {
   const { user } = useContext(AuthContext);
 
   const [task, setTask] = useState<{
     title: string;
     date: Date | undefined;
-    listId: string;
+    listId: string | undefined;
   }>({
     title: "",
     date: undefined,
-    listId: "",
+    listId: undefined,
   });
   const [isDatePickerDropdownOpen, setIsDatePickerDropdownOpen] =
     useState(false);
@@ -69,7 +71,7 @@ export const TaskField: React.FC<TaskFieldProps> = ({ listType, values }) => {
 
   useEnterKeys(handleEnterKeys);
 
-  const handleCreateTaskSubmit = (event: React.FormEvent) => {
+  const handleCreateTaskSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (task.title === "") {
@@ -79,24 +81,19 @@ export const TaskField: React.FC<TaskFieldProps> = ({ listType, values }) => {
 
     if (!user) return;
 
-    console.log(listType);
+    const newTask = await TaskSupabaseService.createTask({
+      userId: user.id,
+      title: task.title,
+      taskListId: task.listId !== "" ? task.listId : undefined,
+      date: task.date,
+    });
 
-    // TaskApiService.createTask({
-    //   taskListType: listType,
-    //   task: {
-    //     userId: user.id,
-    //     title: task.title,
-    //     taskListId: task.listId !== "" ? task.listId : null,
-    //     date: task.date,
-    //   },
-    // });
-
-    // socket.once("taskCreated", () => {
-    //   setTask({
-    //     ...task,
-    //     title: "",
-    //   });
-    // });
+    if (newTask) {
+      setTask({
+        ...task,
+        title: "",
+      });
+    }
   };
 
   useEffect(() => {
@@ -104,7 +101,7 @@ export const TaskField: React.FC<TaskFieldProps> = ({ listType, values }) => {
       setTask({
         ...task,
         date: values?.date,
-        listId: values.taskList?.id ?? "",
+        listId: values.taskList?.id,
       });
     }
   }, [values]);

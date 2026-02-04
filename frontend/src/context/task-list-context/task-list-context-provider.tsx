@@ -22,9 +22,10 @@ export const TaskListContextProvider = ({
 
   const getTaskLists = async () => {
     if (user) {
-      const taskLists = await TaskListSupabaseService.getTaskLists(user.id);
+      const taskLists: TaskList[] | undefined =
+        await TaskListSupabaseService.getTaskLists(user.id);
 
-      setTaskLists(taskLists || []);
+      if (taskLists) setTaskLists(taskLists);
     }
   };
 

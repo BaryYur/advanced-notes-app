@@ -7,6 +7,7 @@ import {
   ThemeProvider,
   AuthContextProvider,
   TaskListContextProvider,
+  TaskContextProvider,
 } from "@/context";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -29,7 +30,9 @@ createRoot(document.getElementById("root")!).render(
           <ThemeProvider defaultTheme="light" storageKey="theme">
             <AuthContextProvider>
               <TaskListContextProvider>
-                <App />
+                <TaskContextProvider>
+                  <App />
+                </TaskContextProvider>
               </TaskListContextProvider>
             </AuthContextProvider>
           </ThemeProvider>
