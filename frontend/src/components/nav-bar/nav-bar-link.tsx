@@ -69,7 +69,7 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
       >
         {isLinkActive && (
           <div
-            className="nav-color-box absolute left-0 z-50 h-full w-20 opacity-[0.08]"
+            className="absolute left-0 z-50 h-full w-20 opacity-[0.08]"
             style={{
               backgroundColor: color,
               filter: "blur(10px)",
