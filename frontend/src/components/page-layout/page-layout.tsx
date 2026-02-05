@@ -47,14 +47,17 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     return format(new Date(), "EEEE MMMM dd");
   };
 
+  const tasksCount = tasks[ListType.Home]?.length ?? 0;
+
   const pageHeadings = {
     [ListType.Home]: (
       <>
-        <h1 className="text-2xl">
+        <h1 className="text-xl">
           Good {getCurrentDayPeriod()} {user?.firstName},
         </h1>
         <p className="text-lg font-medium text-zinc-400/80">
-          It's {formatCurrentDate()} - {tasks[ListType.Home]?.length ?? 0} tasks
+          It's {formatCurrentDate()} - {tasksCount}{" "}
+          <span>{tasksCount > 1 ? "tasks" : "task"}</span>
         </p>
       </>
     ),

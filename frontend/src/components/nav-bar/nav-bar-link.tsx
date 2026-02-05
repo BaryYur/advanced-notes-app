@@ -65,8 +65,18 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
         onClick={() => {
           navigate(`/${pageRoutes.app.index}/${title}`);
         }}
-        className={`${isLinkActive && "bg-gray-100/50"} group z-10 flex cursor-pointer items-center justify-between rounded-xl px-2 py-1.5`}
+        className={`${isLinkActive && "bg-gray-100/50"} group relative z-10 flex cursor-pointer items-center justify-between rounded-xl px-2 py-1.5`}
       >
+        {isLinkActive && (
+          <div
+            className="nav-color-box absolute left-0 z-50 h-full w-20 opacity-[0.08]"
+            style={{
+              backgroundColor: color,
+              filter: "blur(10px)",
+            }}
+          />
+        )}
+
         {isActive ? (
           <div
             onClick={(event) => {
