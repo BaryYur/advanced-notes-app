@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
-import { NavLink } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { useOutsideClick } from "@/hooks";
 
 import { ListIcon } from "@/components";
 
-import { pageRoutes } from "@/config";
-
 import { ListType } from "@/types";
+
+import { pageRoutes } from "@/config";
 
 import { NavBarLinkActionDropdown } from "./nav-bar-link-action-dropdown";
 import { NavBarTaskListField } from "./nav-bar-task-list-field";
@@ -38,6 +38,9 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
   emoji,
   tasksCounter,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [isNavLinkPickerOpen, setIsNavLinkPickerOpen] = useState(false);
 
   const handleClickOutside = () => {
@@ -53,13 +56,16 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
     dependencies: [isNavLinkPickerOpen],
   });
 
+  const isLinkActive =
+    decodeURIComponent(location.pathname.split("/")[2]) === title;
+
   return (
     <li ref={elementRef}>
-      <NavLink
-        to={`/${pageRoutes.app.index}/${title}`}
-        className={({ isActive }) =>
-          `${isActive && "bg-gray-100/50"} group z-10 flex items-center justify-between rounded-xl px-2 py-1.5`
-        }
+      <div
+        onClick={() => {
+          navigate(`/${pageRoutes.app.index}/${title}`);
+        }}
+        className={`${isLinkActive && "bg-gray-100/50"} group z-10 flex cursor-pointer items-center justify-between rounded-xl px-2 py-1.5`}
       >
         {isActive ? (
           <div
@@ -111,7 +117,7 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
             {tasksCounter}
           </div>
         </div>
-      </NavLink>
+      </div>
     </li>
   );
 };

@@ -13,6 +13,7 @@ const getAllTasks = async (userId: string): Promise<AppTasks | null> => {
     .from("task")
     .select(`*, taskList:task_list(*)`)
     .eq("userId", userId)
+    .order("createdAt", { ascending: false })
     .returns<Task[]>();
 
   const { data: taskLists, error: taskListsError } = await supabase
