@@ -12,7 +12,7 @@ import { getCurrentDayPeriod } from "@/lib/utils";
 
 import { format } from "date-fns";
 
-import { SquareCheckBig } from "lucide-react";
+import { SquareCheckBig, Calendar } from "lucide-react";
 
 interface PageLayoutProps {
   pageType: ListType;
@@ -61,7 +61,14 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         </p>
       </>
     ),
-    [ListType.Today]: <p>Today</p>,
+    [ListType.Today]: (
+      <div className="relative">
+        <div className="absolute inset-y-0 -left-8 top-0 flex items-center">
+          <Calendar size={24} strokeWidth={2.2} />
+        </div>
+        <p className="text-xl">Today</p>
+      </div>
+    ),
     [ListType.Completed]: (
       <div className="relative">
         <div className="absolute inset-y-0 -left-8 top-0 flex items-center">
