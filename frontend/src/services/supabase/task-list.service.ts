@@ -4,6 +4,8 @@ import { supabase } from "@/supabase";
 
 import { handleApiError } from "@/errors";
 
+import { format } from "date-fns";
+
 const getTaskLists = async (
   userId: string,
 ): Promise<TaskList[] | undefined> => {
@@ -98,15 +100,21 @@ const deleteTaskList = async (id: string): Promise<void> => {
 };
 
 const deleteAllTasks = async ({
+  userId,
   taskListId,
   taskListType,
 }: {
+  userId: string;
   taskListId?: string;
   taskListType: ListType;
 }): Promise<void> => {
   switch (taskListType) {
     case ListType.Home: {
-      const { error } = await supabase.from("task").delete();
+      const { error } = await supabase
+        .from("task")
+        .delete()
+        .eq("userId", userId)
+        .eq("completed", false);
 
       if (error) {
         handleApiError(error);
@@ -117,13 +125,13 @@ const deleteAllTasks = async ({
     }
 
     case ListType.Today: {
-      const startOfDay = new Date();
-      startOfDay.setHours(0, 0, 0, 0);
+      const today = format(new Date(), "yyyy-MM-dd");
 
       const { error } = await supabase
         .from("task")
         .delete()
-        .gte("createdAt", startOfDay.toISOString());
+        .eq("userId", userId)
+        .eq("date", today);
 
       if (error) {
         handleApiError(error);
