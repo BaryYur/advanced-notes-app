@@ -97,6 +97,7 @@ export const NavBarLinkActionDropdown: React.FC<
       <Menu>
         <MenuButton
           type="button"
+          onClick={(event) => event.stopPropagation()}
           className="rounded-lg p-1.5 opacity-0 hover:bg-gray-200/40 group-hover:opacity-100 data-[open]:opacity-100"
         >
           <EllipsisVertical size={18} />
