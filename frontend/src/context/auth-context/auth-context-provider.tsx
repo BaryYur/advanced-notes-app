@@ -27,7 +27,11 @@ export const AuthContextProvider = ({
   );
   const [user, setUser] = useState<User | null>(null);
 
-  const { data: userData, isPending: isUserDataPending } = useGetUser();
+  const {
+    data: userData,
+    isPending: isUserDataPending,
+    isError: isUserDataError,
+  } = useGetUser();
 
   const clearAuthData = () => {
     localStorage.removeItem("isLoggedIn");
@@ -61,6 +65,12 @@ export const AuthContextProvider = ({
       setAuthData();
     }
   }, [userData]);
+
+  useEffect(() => {
+    if (isUserDataError) {
+      clearAuthData();
+    }
+  }, [isUserDataError]);
 
   return (
     <AuthContext.Provider
