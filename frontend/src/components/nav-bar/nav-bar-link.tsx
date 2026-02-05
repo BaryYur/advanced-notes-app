@@ -69,7 +69,7 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
       >
         {isLinkActive && (
           <div
-            className="absolute left-0 z-50 h-full w-20 opacity-[0.08]"
+            className="absolute left-0 h-full w-20 opacity-[0.08]"
             style={{
               backgroundColor: color,
               filter: "blur(10px)",
@@ -113,7 +113,7 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
           </div>
         )}
 
-        <div className="flex items-center gap-2">
+        <div className="relative flex items-center gap-2">
           <NavBarLinkActionDropdown
             taskList={{
               id: taskListId,
