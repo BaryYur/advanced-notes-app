@@ -1,4 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useContext } from "react";
+
+import { AuthContext } from "@/context";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -27,15 +29,20 @@ export const NavBarLinkActionDropdown: React.FC<
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { user } = useContext(AuthContext);
+
   const handleDeleteAllTasks = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.stopPropagation();
 
-    await TaskListSupabaseService.deleteAllTasks({
-      taskListId: taskList?.id,
-      taskListType: navBarLinkType,
-    });
+    if (user) {
+      await TaskListSupabaseService.deleteAllTasks({
+        userId: user.id,
+        taskListId: taskList?.id,
+        taskListType: navBarLinkType,
+      });
+    }
   };
 
   const handleEditTaskListName = (
@@ -90,7 +97,7 @@ export const NavBarLinkActionDropdown: React.FC<
         linkTypes: [ListType.Default],
       },
     ];
-  }, []);
+  }, [handleDeleteAllTasks, handleDeleteTaskList, handleEditTaskListName]);
 
   return (
     <div className="relative">
