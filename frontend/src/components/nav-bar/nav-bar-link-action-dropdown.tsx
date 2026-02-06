@@ -1,4 +1,4 @@
-import React, { useMemo, useContext } from "react";
+import React, { useMemo, useContext, useState } from "react";
 
 import { AuthContext } from "@/context";
 
@@ -9,6 +9,8 @@ import { TaskListSupabaseService } from "@/services";
 import { ListType } from "@/types";
 
 import { pageRoutes } from "@/config";
+
+import { NavBarLinkDeleteModal } from "./nav-bar-link-delete-modal";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
@@ -30,6 +32,8 @@ export const NavBarLinkActionDropdown: React.FC<
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleDeleteAllTasks = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -53,11 +57,15 @@ export const NavBarLinkActionDropdown: React.FC<
     onStartEdit?.();
   };
 
-  const handleDeleteTaskList = async (
+  const handleOpenDeleteModal = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.stopPropagation();
 
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteTaskList = async () => {
     if (taskList) {
       const taskListName = location.pathname.split("/")[2];
       const decodedTaskListName = decodeURIComponent(taskListName);
@@ -93,43 +101,51 @@ export const NavBarLinkActionDropdown: React.FC<
       {
         title: "Delete list",
         icon: <Trash2 size={14} />,
-        action: (event) => handleDeleteTaskList(event),
+        action: (event) => handleOpenDeleteModal(event),
         linkTypes: [ListType.Default],
       },
     ];
   }, [handleDeleteAllTasks, handleDeleteTaskList, handleEditTaskListName]);
 
   return (
-    <div className="relative">
-      <Menu>
-        <MenuButton
-          type="button"
-          onClick={(event) => event.stopPropagation()}
-          className="rounded-lg p-1.5 opacity-0 hover:bg-gray-200/40 group-hover:opacity-100 data-[open]:opacity-100"
-        >
-          <EllipsisVertical size={18} />
-        </MenuButton>
+    <>
+      <div className="relative">
+        <Menu>
+          <MenuButton
+            type="button"
+            onClick={(event) => event.stopPropagation()}
+            className="rounded-lg p-1.5 opacity-0 hover:bg-gray-200/40 group-hover:opacity-100 data-[open]:opacity-100"
+          >
+            <EllipsisVertical size={18} />
+          </MenuButton>
 
-        <MenuItems
-          transition
-          anchor="bottom start"
-          className="absolute z-50 mt-1.5 rounded-xl border border-gray-200 bg-white p-1 text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-        >
-          {actions.map((action) => {
-            return action.linkTypes.includes(navBarLinkType) ? (
-              <MenuItem key={action.title}>
-                <button
-                  className="flex w-full items-center justify-start gap-2 rounded-md px-2 py-1.5 hover:bg-gray-100"
-                  onClick={(event) => action.action(event)}
-                >
-                  {action.icon}
-                  <span className="text-xs font-medium">{action.title}</span>
-                </button>
-              </MenuItem>
-            ) : null;
-          })}
-        </MenuItems>
-      </Menu>
-    </div>
+          <MenuItems
+            transition
+            anchor="bottom start"
+            className="absolute z-50 mt-1.5 rounded-xl border border-gray-200 bg-white p-1 text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          >
+            {actions.map((action) => {
+              return action.linkTypes.includes(navBarLinkType) ? (
+                <MenuItem key={action.title}>
+                  <button
+                    className="flex w-full items-center justify-start gap-2 rounded-md px-2 py-1.5 hover:bg-gray-100"
+                    onClick={(event) => action.action(event)}
+                  >
+                    {action.icon}
+                    <span className="text-xs font-medium">{action.title}</span>
+                  </button>
+                </MenuItem>
+              ) : null;
+            })}
+          </MenuItems>
+        </Menu>
+      </div>
+
+      <NavBarLinkDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onSubmitDeletion={handleDeleteTaskList}
+      />
+    </>
   );
 };
