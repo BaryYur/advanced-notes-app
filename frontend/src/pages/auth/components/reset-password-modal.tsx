@@ -64,7 +64,7 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
             <DialogTitle className="text-lg font-semibold">
               Send verification code
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-sm text-zinc-400">
               It sends verification code to your email
             </DialogDescription>
             <input

@@ -102,13 +102,13 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
 
   return (
     <div className="mx-auto w-full md:w-[600px]">
-      <div className="fixed left-0 top-0 z-30 w-full pl-[365px] pt-20 backdrop-blur-sm">
+      <div className="fixed left-0 top-0 z-30 w-full pl-[365px] pt-12 backdrop-blur-sm">
         <div className="mx-auto pb-4 md:w-[600px]">
           {pageHeadings[pageType]}
         </div>
       </div>
 
-      <div className={`${pageType === ListType.Home && "pt-40"} pt-32`}>
+      <div className={`${pageType === ListType.Home && "pt-[128px]"} pt-24`}>
         {children}
       </div>
     </div>

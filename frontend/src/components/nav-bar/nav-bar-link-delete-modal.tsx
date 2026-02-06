@@ -22,7 +22,10 @@ export const NavBarLinkDeleteModal: React.FC<NavBarLinkDeleteModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="w-[400px] overflow-hidden px-0 pb-0 sm:rounded-xl">
+      <DialogContent
+        className="w-[400px] overflow-hidden px-0 pb-0 sm:rounded-xl"
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="px-5 py-3">
           <DialogTitle className="text-lg font-semibold">
             Are you sure?
@@ -37,14 +40,22 @@ export const NavBarLinkDeleteModal: React.FC<NavBarLinkDeleteModalProps> = ({
             type="button"
             variant="destructive"
             className="w-[84px]"
-            onClick={onClose}
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+
+              onClose();
+            }}
           >
             Cancel
           </Button>
           <Button
             type="submit"
             className="w-[84px]"
-            onClick={() => {
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+
               onSubmitDeletion();
               onClose();
             }}
