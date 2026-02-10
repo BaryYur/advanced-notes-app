@@ -1,13 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { AuthContext } from "@/context";
 
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components";
 
 import { ChevronsUpDown, LogOutIcon, Settings } from "lucide-react";
 
 export const NavBarUserDropdown = () => {
   const { user, logout } = useContext(AuthContext);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const userBox = (
     <div className="flex items-center gap-2">
@@ -26,43 +32,38 @@ export const NavBarUserDropdown = () => {
   );
 
   return (
-    <div className="relative">
-      <Menu>
-        <MenuButton className="relative flex w-full items-center justify-between rounded-xl p-3 transition-all duration-300 hover:bg-gray-100/50 data-[open]:bg-gray-100/50">
-          {userBox}
-          <ChevronsUpDown size={16} />
-        </MenuButton>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger
+        className={`${isOpen ? "bg-gray-100/50" : ""} relative flex w-full items-center justify-between rounded-xl p-3 transition-all duration-300 hover:bg-gray-100/50`}
+      >
+        {userBox}
+        <ChevronsUpDown size={16} />
+      </DropdownMenuTrigger>
 
-        <MenuItems
-          transition
-          className="absolute -right-[260px] bottom-0 z-50 w-64 rounded-xl border border-gray-200 bg-white p-1.5 text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-        >
-          <MenuItem>
-            <div className="pb-2">{userBox}</div>
-          </MenuItem>
+      <DropdownMenuContent
+        align="end"
+        side="top"
+        className="absolute -bottom-[60px] -right-[260px] z-50 w-64 rounded-xl border border-gray-200 bg-white p-1.5 text-sm/6 shadow-none transition duration-100 ease-out"
+      >
+        <div className="pb-2">{userBox}</div>
 
-          <MenuItem>
-            <div className="py-1 border-t">
-              <button className="w-full flex items-center gap-2 justify-start hover:bg-gray-100 px-1 py-1.5 rounded-md">
-                <Settings size={16} />
-                <span className="font-medium text-[13px]">Settings</span>
-              </button>
-            </div>
-          </MenuItem>
+        <div className="border-t py-1">
+          <button className="flex w-full items-center justify-start gap-2 rounded-md px-1 py-1.5 hover:bg-gray-100">
+            <Settings size={16} />
+            <span className="text-[13px] font-medium">Settings</span>
+          </button>
+        </div>
 
-          <MenuItem>
-            <div className="pt-1 border-t">
-              <button 
-                className="w-full flex items-center gap-2 justify-start hover:bg-gray-100 px-1 py-1.5 rounded-md"
-                onClick={logout}
-              >
-                <LogOutIcon size={16} />
-                <span className="font-medium text-[13px]">Log out</span>
-              </button>
-            </div>
-          </MenuItem>
-        </MenuItems>
-      </Menu>
-    </div>
+        <div className="border-t pt-1">
+          <button
+            className="flex w-full items-center justify-start gap-2 rounded-md px-1 py-1.5 hover:bg-gray-100"
+            onClick={logout}
+          >
+            <LogOutIcon size={16} />
+            <span className="text-[13px] font-medium">Log out</span>
+          </button>
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

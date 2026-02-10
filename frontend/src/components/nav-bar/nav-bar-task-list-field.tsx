@@ -143,12 +143,14 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
           }
           onOpen={() => {
             onOpenPickerInNavLink?.();
+            setFormData({ ...formData, isActive: true });
             setIsTaskListIconPickerOpen(true);
           }}
         />
 
         <div className="relative">
           <input
+            name="task-list-name"
             placeholder={formData.isActive ? "List name" : "Add task list"}
             ref={inputRef}
             value={formData.taskListName}

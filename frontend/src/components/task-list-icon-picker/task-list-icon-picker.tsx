@@ -1,16 +1,15 @@
 import React, { useMemo } from "react";
 
 import {
-  Menu,
-  MenuButton,
-  MenuItems,
-  TabGroup,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-} from "@headlessui/react";
-import { TaskListColorSelector } from "@/components";
+  TaskListColorSelector,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components";
 
 import { Plus, ChevronDown } from "lucide-react";
 
@@ -33,31 +32,33 @@ export const TaskListIconPicker: React.FC<TaskListIconPickerProps> = ({
         name: "Color",
         title: "Colors",
         component: (
-          <TaskListColorSelector selectedColor={selectedColor} onColorChange={onColorChange} />
+          <TaskListColorSelector
+            selectedColor={selectedColor}
+            onColorChange={onColorChange}
+          />
         ),
       },
       {
         name: "Emoji",
         title: "Emojis",
-        component: <div className="p-2">emojis</div>
+        component: <div className="p-2">emojis</div>,
       },
     ];
   }, [selectedColor, onColorChange]);
 
   return (
-    <div className="relative">
-      <Menu>
-        <MenuButton
-          type="button"
-          onClick={onOpen}
-          className="flex rounded-md data-[open]:bg-gray-100"
-        >
+    <DropdownMenu onOpenChange={() => onOpen()}>
+      <DropdownMenuTrigger asChild>
+        <button className={`${isActive ? "bg-gray-100" : ""} flex rounded-md`}>
           <div
             className={`${isActive ? "" : "hidden"} flex items-center gap-2 rounded-lg px-2 py-2 transition-all duration-300 hover:bg-gray-100 group-hover:bg-gray-100`}
           >
             {
               <div>
-                <div style={{ borderColor: selectedColor }} className="h-2.5 w-2.5 rounded-sm border-[2px]" />
+                <div
+                  style={{ borderColor: selectedColor }}
+                  className="h-2.5 w-2.5 rounded-sm border-[2px]"
+                />
               </div>
             }
             <ChevronDown size={15} />
@@ -68,38 +69,34 @@ export const TaskListIconPicker: React.FC<TaskListIconPickerProps> = ({
           >
             <Plus size={15} />
           </div>
-        </MenuButton>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        side="bottom"
+        onClick={(event) => event.stopPropagation()}
+        className="z-50 mt-1.5 w-80 rounded-2xl border border-gray-200 bg-white p-1 text-sm/6 shadow-none"
+      >
+        <Tabs defaultValue={tabs[0].name}>
+          <TabsList className="bg-transparent">
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.name}
+                value={tab.name}
+                className="rounded-md px-3 py-1.5 shadow-none"
+              >
+                {tab.title}
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
-        <MenuItems
-          transition
-          onClick={(event) => event.stopPropagation()}
-          anchor="bottom start"
-          className="absolute z-50 mt-1.5 w-80 rounded-xl border border-gray-200 bg-white text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-        >
-          <div>
-            <TabGroup>
-              <TabList className="flex gap-2 p-1.5">
-                {tabs.map(({ name }) => (
-                  <Tab
-                    key={name}
-                    className="rounded-md px-3 py-1.5 data-[selected]:bg-gray-100"
-                  >
-                    {name}
-                  </Tab>
-                ))}
-              </TabList>
-
-              <TabPanels className="mt-1">
-                {tabs.map(({ name, component }) => (
-                  <TabPanel key={name} className="rounded-xl bg-white/5">
-                    {component}
-                  </TabPanel>
-                ))}
-              </TabPanels>
-            </TabGroup>
-          </div>
-        </MenuItems>
-      </Menu>
-    </div>
+          {tabs.map((tab) => (
+            <TabsContent key={tab.name} value={tab.name}>
+              {tab.component}
+            </TabsContent>
+          ))}
+        </Tabs>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

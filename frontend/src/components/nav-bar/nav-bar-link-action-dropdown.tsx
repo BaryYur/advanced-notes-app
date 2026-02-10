@@ -2,17 +2,18 @@ import React, { useMemo, useContext, useState } from "react";
 
 import { AuthContext } from "@/context";
 
-import { useLocation, useNavigate } from "react-router-dom";
-
 import { TaskListSupabaseService } from "@/services";
 
 import { ListType } from "@/types";
 
-import { pageRoutes } from "@/config";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components";
 import { NavBarLinkDeleteModal } from "./nav-bar-link-delete-modal";
-
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
 import { EllipsisVertical, Pencil, Delete, Trash2 } from "lucide-react";
 
@@ -28,17 +29,17 @@ interface NavBarLinkActionDropdownProps {
 export const NavBarLinkActionDropdown: React.FC<
   NavBarLinkActionDropdownProps
 > = ({ taskList, navBarLinkType = ListType.Default, onStartEdit }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const { user } = useContext(AuthContext);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleDeleteAllTasks = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.stopPropagation();
+
+    setIsDropdownOpen(false);
 
     if (user) {
       await TaskListSupabaseService.deleteAllTasks({
@@ -55,6 +56,7 @@ export const NavBarLinkActionDropdown: React.FC<
     event.stopPropagation();
 
     onStartEdit?.();
+    setIsDropdownOpen(false);
   };
 
   const handleOpenDeleteModal = (
@@ -67,13 +69,6 @@ export const NavBarLinkActionDropdown: React.FC<
 
   const handleDeleteTaskList = async () => {
     if (taskList) {
-      const taskListName = location.pathname.split("/")[2];
-      const decodedTaskListName = decodeURIComponent(taskListName);
-
-      if (taskList.name === decodedTaskListName) {
-        navigate(pageRoutes.app.home);
-      }
-
       await TaskListSupabaseService.deleteTaskList(taskList.id);
     }
   };
@@ -110,35 +105,39 @@ export const NavBarLinkActionDropdown: React.FC<
   return (
     <>
       <div className="relative">
-        <Menu>
-          <MenuButton
-            type="button"
-            onClick={(event) => event.stopPropagation()}
-            className="rounded-lg p-1.5 opacity-0 hover:bg-gray-200/40 group-hover:opacity-100 data-[open]:opacity-100"
-          >
-            <EllipsisVertical size={18} />
-          </MenuButton>
+        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={`${isDropdownOpen ? "opacity-100" : "opacity-0"} relative z-30 rounded-lg p-1.5 hover:bg-gray-100 group-hover:opacity-100`}
+            >
+              <EllipsisVertical size={18} />
+            </button>
+          </DropdownMenuTrigger>
 
-          <MenuItems
-            transition
-            anchor="bottom start"
-            className="absolute z-50 mt-1.5 rounded-xl border border-gray-200 bg-white p-1 text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          <DropdownMenuContent
+            align="start"
+            side="bottom"
+            className="z-50 min-w-[150px] rounded-xl border border-gray-200 bg-white p-1.5 text-sm/6 shadow-sm transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none"
           >
-            {actions.map((action) => {
-              return action.linkTypes.includes(navBarLinkType) ? (
-                <MenuItem key={action.title}>
-                  <button
-                    className="flex w-full items-center justify-start gap-2 rounded-md px-2 py-1.5 hover:bg-gray-100"
-                    onClick={(event) => action.action(event)}
-                  >
-                    {action.icon}
-                    <span className="text-xs font-medium">{action.title}</span>
-                  </button>
-                </MenuItem>
-              ) : null;
-            })}
-          </MenuItems>
-        </Menu>
+            <DropdownMenuGroup>
+              {actions.map((action) => {
+                return action.linkTypes.includes(navBarLinkType) ? (
+                  <DropdownMenuItem key={action.title} className="p-0">
+                    <button
+                      className="flex w-full items-center justify-start gap-2 rounded-md p-1.5 hover:bg-gray-100"
+                      onClick={(event) => action.action(event)}
+                    >
+                      {action.icon}
+                      <span className="text-xs font-medium">
+                        {action.title}
+                      </span>
+                    </button>
+                  </DropdownMenuItem>
+                ) : null;
+              })}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <NavBarLinkDeleteModal

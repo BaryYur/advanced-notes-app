@@ -4,21 +4,22 @@ import { TaskListContext } from "@/context";
 
 import { TaskList } from "@/types";
 
-import { ListIcon } from "@/components";
-
 import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from "@headlessui/react";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components";
 
-import { Check, ChevronDown } from "lucide-react";
+import { Check } from "lucide-react";
 
 type ListType = Omit<Omit<TaskList, "userId">, "tasksCounter">;
 
 interface TaskListDropdownProps {
   onOpen: () => void;
+  onClose: () => void;
   onInputFocus: () => void;
   currentTaskList?: TaskList;
   onSelectList: (value: ListType) => void;
@@ -26,6 +27,7 @@ interface TaskListDropdownProps {
 
 export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
   onOpen,
+  onClose,
   onInputFocus,
   currentTaskList,
   onSelectList,
@@ -42,10 +44,15 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
   const [selectedTaskList, setSelectedTaskList] =
     useState<ListType>(defaultList);
 
-  const handleSelectList = (value: ListType) => {
-    setSelectedTaskList(value);
-    onSelectList(value);
-    onInputFocus();
+  const handleSelectList = (value: string) => {
+    const list = lists.find((list) => list.name === value);
+
+    if (list) {
+      setSelectedTaskList(list);
+      onSelectList(list);
+      onInputFocus();
+      onClose();
+    }
   };
 
   const createListboxLists = () => {
@@ -75,63 +82,54 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
   }, [currentTaskList]);
 
   return (
-    <Listbox value={selectedTaskList} onChange={handleSelectList}>
-      <ListboxButton
-        type="button"
-        onClick={onOpen}
-        className="relative flex items-center gap-1 rounded-md bg-gray-100 px-2 py-1.5"
+    <Select
+      defaultValue={selectedTaskList.name}
+      onOpenChange={() => onOpen()}
+      onValueChange={(value) => handleSelectList(value)}
+    >
+      <SelectTrigger className="relative flex h-[30px] items-center gap-1 rounded-md border border-none border-red-400 bg-gray-100 px-2 py-0 shadow-none">
+        <SelectValue placeholder="List" />
+      </SelectTrigger>
+      <SelectContent
+        align="end"
+        side="bottom"
+        onCloseAutoFocus={(event) => event.preventDefault()}
+        className="mt-2.5 rounded-xl"
       >
-        <div className="flex items-center gap-2">
-          <ListIcon
-            color={selectedTaskList.color}
-            emoji={selectedTaskList.emoji}
-          />
+        <SelectGroup>
+          {lists.map((list) => (
+            <SelectItem
+              key={list.id}
+              value={list.name}
+              className="flex h-[30px] w-full min-w-36 cursor-pointer items-center justify-between gap-2 rounded-md px-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div>
+                    {list.emoji ? (
+                      <div>{list.emoji}</div>
+                    ) : (
+                      <div>
+                        <div
+                          style={{ borderColor: list.color }}
+                          className="h-[8px] w-[8px] rounded-[3px] border-[2px]"
+                        />
+                      </div>
+                    )}
+                  </div>
 
-          <span className="whitespace-nowrap text-sm">
-            {selectedTaskList?.name}
-          </span>
-        </div>
-
-        <ChevronDown size={15} />
-      </ListboxButton>
-
-      <ListboxOptions
-        transition
-        anchor="bottom end"
-        className="absolute z-50 mt-3 rounded-xl border border-gray-200 bg-white p-1 text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-      >
-        {lists.map((list) => (
-          <ListboxOption
-            key={list.id}
-            value={list}
-            className="group flex cursor-default select-none data-[focus]:bg-white/10"
-          >
-            <button className="flex w-full min-w-36 items-center justify-between gap-2 rounded-md px-3 py-1.5 hover:bg-gray-100">
-              <div className="flex items-center gap-2">
-                <div>
-                  {list.emoji ? (
-                    <div>{list.emoji}</div>
-                  ) : (
-                    <div>
-                      <div
-                        style={{ borderColor: list.color }}
-                        className="h-[8px] w-[8px] rounded-[3px] border-[2px]"
-                      />
-                    </div>
-                  )}
+                  <span className="text-xs">{list.name}</span>
                 </div>
 
-                <span className="text-xs">{list.name}</span>
+                <Check
+                  size={13}
+                  className="invisible fill-white group-data-[selected]:visible"
+                />
               </div>
-
-              <Check
-                size={13}
-                className="invisible fill-white group-data-[selected]:visible"
-              />
-            </button>
-          </ListboxOption>
-        ))}
-      </ListboxOptions>
-    </Listbox>
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 };

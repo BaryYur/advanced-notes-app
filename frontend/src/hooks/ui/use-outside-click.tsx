@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 interface useOutsideClickProps {
-  onOutsideClick: (event?: MouseEvent) => void;
+  onOutsideClick?: (event?: MouseEvent) => void;
   dependencies?: unknown[];
 }
 
@@ -18,7 +18,7 @@ export const useOutsideClick = <T extends HTMLElement>({
         elementRef.current &&
         !elementRef.current.contains(event.target as Node)
       ) {
-        onOutsideClick(event);
+        onOutsideClick?.(event);
       }
     };
 

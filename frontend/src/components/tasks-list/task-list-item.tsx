@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import { TaskList } from "@/types";
 
-import { useOutsideClick } from "@/hooks";
-
 import { TaskSupabaseService } from "@/services";
 
 import { Checkbox, ListIcon } from "@/components";
@@ -38,15 +36,10 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
   note,
   taskList,
 }) => {
-  const { isActive, setIsActive, elementRef } = useOutsideClick<HTMLDivElement>(
-    {
-      onOutsideClick: () => setIsActive(false),
-    },
-  );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
 
   // const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [isCompleting, setIsCompleting] = useState(false);
 
   const handleCompleteTask = async (
     event: React.FormEvent<HTMLButtonElement>,
@@ -96,15 +89,14 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
           </div>
         </div>
 
-        <div ref={elementRef}>
-          <TaskListItemDropdown
-            taskId={id}
-            toggleOpen={() => setIsActive((active) => !active)}
-          />
-        </div>
+        <TaskListItemDropdown
+          taskId={id}
+          isOpen={isDropdownOpen}
+          toggleOpen={() => setIsDropdownOpen((active) => !active)}
+        />
 
         <div
-          className={`${isActive && "opacity-0"} absolute inset-y-1 right-3 flex items-center gap-1.5 transition-all duration-200 group-hover:opacity-0`}
+          className={`${isDropdownOpen && "opacity-0"} absolute inset-y-1 right-3 flex items-center gap-1.5 transition-all duration-200 group-hover:opacity-0`}
         >
           {note !== "" && (
             <div className="rounded-sm border-2 border-gray-300 p-0.5 text-gray-400">
