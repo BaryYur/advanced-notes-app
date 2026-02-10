@@ -2,18 +2,26 @@ import React, { useMemo } from "react";
 
 import { TaskSupabaseService } from "@/services";
 
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components";
 
 import { Edit2, Trash2, Copy, EllipsisVertical } from "lucide-react";
 
 interface TaskListItemDropdownProps {
   taskId: string;
   toggleOpen: () => void;
+  isOpen: boolean;
 }
 
 export const TaskListItemDropdown: React.FC<TaskListItemDropdownProps> = ({
   taskId,
   toggleOpen,
+  isOpen,
 }) => {
   const handleEditTask = () => {};
 
@@ -47,33 +55,34 @@ export const TaskListItemDropdown: React.FC<TaskListItemDropdownProps> = ({
   }, []);
 
   return (
-    <Menu>
-      <MenuButton
-        onClick={toggleOpen}
-        className="relative z-30 rounded-lg p-1.5 opacity-0 hover:bg-gray-100 group-hover:opacity-100 data-[open]:opacity-100"
-      >
-        <EllipsisVertical size={18} />
-      </MenuButton>
+    <DropdownMenu open={isOpen} onOpenChange={() => toggleOpen()}>
+      <DropdownMenuTrigger asChild>
+        <button
+          className={`${isOpen ? "opacity-100" : "opacity-0"} relative z-30 rounded-lg p-1.5 hover:bg-gray-100 group-hover:opacity-100`}
+        >
+          <EllipsisVertical size={18} />
+        </button>
+      </DropdownMenuTrigger>
 
-      <MenuItems
-        transition
-        anchor="bottom end"
-        className="absolute z-50 min-w-[150px] rounded-xl border border-gray-200 bg-white p-1.5 text-sm/6 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+      <DropdownMenuContent
+        align="end"
+        side="bottom"
+        className="z-50 min-w-[150px] rounded-xl border border-gray-200 bg-white p-1.5 text-sm/6 shadow-sm transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none"
       >
-        <div>
+        <DropdownMenuGroup>
           {actions.map((action) => (
-            <MenuItem key={action.id}>
+            <DropdownMenuItem key={action.id} className="p-0">
               <button
-                className="flex w-full items-center justify-start gap-2 rounded-md px-2 py-1.5 hover:bg-gray-100"
+                className="flex w-full items-center justify-start gap-2 rounded-md p-1.5 hover:bg-gray-100"
                 onClick={() => action.action()}
               >
                 {action.icon}
                 <span className="text-xs font-medium">{action.title}</span>
               </button>
-            </MenuItem>
+            </DropdownMenuItem>
           ))}
-        </div>
-      </MenuItems>
-    </Menu>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

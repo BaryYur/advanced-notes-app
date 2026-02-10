@@ -121,6 +121,7 @@ export const TaskField: React.FC<TaskFieldProps> = ({ values }) => {
         </div>
 
         <input
+          name="task-title"
           placeholder="Create a new task"
           ref={inputRef}
           value={task.title}
@@ -139,6 +140,7 @@ export const TaskField: React.FC<TaskFieldProps> = ({ values }) => {
         />
         <TaskListDropdown
           onOpen={() => setIsTaskListsDropdownOpen(true)}
+          onClose={() => setIsTaskListsDropdownOpen(false)}
           onInputFocus={() => inputRef.current?.focus()}
           currentTaskList={values?.taskList}
           onSelectList={(value) => setTask({ ...task, listId: value.id })}

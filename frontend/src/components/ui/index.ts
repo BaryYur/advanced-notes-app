@@ -4,3 +4,6 @@ export * from "./skeleton";
 export * from "./calendar";
 export * from "./checkbox";
 export * from "./dialog";
+export * from "./dropdown-menu";
+export * from "./select";
+export * from "./tabs";
