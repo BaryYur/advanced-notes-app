@@ -61,6 +61,8 @@ export const TaskContextProvider = ({
   }, [user]);
 
   return (
-    <TaskContext.Provider value={{ tasks }}>{children}</TaskContext.Provider>
+    <TaskContext.Provider value={{ tasks, getAllTasks }}>
+      {children}
+    </TaskContext.Provider>
   );
 };

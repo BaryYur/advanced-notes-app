@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 
-import { AuthContext, TaskListContext } from "@/context";
+import { AuthContext, TaskListContext, TaskContext } from "@/context";
 
 import { useEnterKeys, useOutsideClick } from "@/hooks";
 
@@ -33,6 +33,7 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
 }) => {
   const { user } = useContext(AuthContext);
   const { checkIsTaskListNameAvailable } = useContext(TaskListContext);
+  const { getAllTasks } = useContext(TaskContext);
 
   const [formData, setFormData] = useState({
     taskListName: taskListData?.name ?? "",
@@ -119,6 +120,8 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
         name: formData.taskListName.trim(),
         color: formData.selectedColor.trim(),
       });
+
+      await getAllTasks();
 
       onUpdateAction?.();
     }

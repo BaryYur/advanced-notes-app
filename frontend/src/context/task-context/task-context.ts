@@ -11,6 +11,7 @@ export interface AppTasks {
 
 type TaskContextType = {
   tasks: AppTasks;
+  getAllTasks: () => Promise<void>;
 };
 
 export const TaskContext = createContext({} as TaskContextType);
