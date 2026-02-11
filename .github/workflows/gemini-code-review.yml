@@ -22,7 +22,7 @@ jobs:
         with:
           gemini-key: ${{ secrets.GEMINI_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          model: "gemini-1.5-flash"
+          model: "gemini-2.0-flash"
           prompt: |
             You are a senior full-stack architect. Analyze the changes in this Pull Request thoroughly.
             Focus your review on these critical areas:
