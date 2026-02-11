@@ -75,7 +75,7 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
             />
             <div className="relative flex items-center">
               <span
-                className={`${(completed || isCompleting) && "text-zinc-500"} relative z-10 text-sm transition-colors duration-300`}
+                className={`${(completed || isCompleting) && "text-zinc-500"} relative z-10 max-w-[440px] truncate text-sm transition-colors duration-300`}
               >
                 {title}
                 <motion.div
