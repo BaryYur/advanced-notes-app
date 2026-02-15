@@ -45,7 +45,7 @@ export interface CreateTaskListData {
   name: string;
   userId: string;
   color: string;
-  emoji?: string;
+  emoji?: string | null;
 }
 
 const createTaskList = async (
@@ -67,7 +67,7 @@ const createTaskList = async (
 
 export interface UpdateTaskListData {
   name?: string;
-  emoji?: string;
+  emoji?: string | null;
   color?: string;
 }
 

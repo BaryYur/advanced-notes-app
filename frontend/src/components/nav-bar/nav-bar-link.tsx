@@ -78,29 +78,26 @@ export const NavBarLink: React.FC<NavBarLinkProps> = ({
         )}
 
         {isActive ? (
-          <div
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
+          <NavBarTaskListField
+            action="update"
+            isInLinkPickerOpen={isNavLinkPickerOpen}
+            onOpenPickerInNavLink={() => setIsNavLinkPickerOpen(true)}
+            onUpdateAction={() => setIsActive(false)}
+            taskListData={{
+              id: taskListId,
+              name: title,
+              color: color,
+              emoji: emoji,
             }}
-          >
-            <NavBarTaskListField
-              action="update"
-              isInLinkPickerOpen={isNavLinkPickerOpen}
-              onOpenPickerInNavLink={() => setIsNavLinkPickerOpen(true)}
-              onUpdateAction={() => setIsActive(false)}
-              taskListData={{
-                id: taskListId,
-                name: title,
-                color: color,
-                emoji: emoji,
-              }}
-            />
-          </div>
+          />
         ) : (
           <div className="flex items-center gap-2">
             {linkType === ListType.Default ? (
-              <ListIcon color={color} emoji={emoji} />
+              <ListIcon
+                color={color}
+                emoji={emoji}
+                emojiClassName="-ml-1 -mr-0.5 text-xs"
+              />
             ) : (
               mainIcons[linkType]
             )}

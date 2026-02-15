@@ -83,7 +83,7 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
 
   return (
     <Select
-      defaultValue={selectedTaskList.name}
+      value={selectedTaskList.name}
       onOpenChange={() => onOpen()}
       onValueChange={(value) => handleSelectList(value)}
     >
@@ -107,7 +107,7 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
                 <div className="flex items-center gap-2">
                   <div>
                     {list.emoji ? (
-                      <div>{list.emoji}</div>
+                      <div className="text-xs">{list.emoji}</div>
                     ) : (
                       <div>
                         <div

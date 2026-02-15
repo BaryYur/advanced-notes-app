@@ -23,7 +23,7 @@ export const NavBarLinkDeleteModal: React.FC<NavBarLinkDeleteModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent
-        className="w-[400px] overflow-hidden px-0 pb-0 sm:rounded-xl"
+        className="w-[360px] overflow-hidden px-0 pb-0 sm:rounded-xl"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="px-5 py-3">

@@ -11,6 +11,7 @@ import { TaskList } from "@/types";
 import { TaskListIconPicker } from "@/components";
 
 import { COLORS } from "@/lib/data";
+import { getRandomColor } from "@/lib/utils";
 
 import { Command } from "lucide-react";
 
@@ -38,6 +39,7 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
   const [formData, setFormData] = useState({
     taskListName: taskListData?.name ?? "",
     selectedColor: taskListData?.color ?? COLORS[0],
+    selectedEmoji: taskListData?.emoji ?? null,
     isActive: !!taskListData,
   });
 
@@ -97,6 +99,7 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
         name: formData.taskListName.trim(),
         userId: user.id,
         color: formData.selectedColor.trim(),
+        emoji: formData.selectedEmoji,
       });
 
       if (newList) {
@@ -104,6 +107,8 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
           ...formData,
           taskListName: "",
           isActive: false,
+          selectedColor: COLORS[0],
+          selectedEmoji: null,
         });
       }
     }
@@ -119,6 +124,7 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
       await TaskListSupabaseService.updateTaskList(taskListData.id, {
         name: formData.taskListName.trim(),
         color: formData.selectedColor.trim(),
+        emoji: formData.selectedEmoji,
       });
 
       await getAllTasks();
@@ -138,10 +144,19 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
         <TaskListIconPicker
           isActive={formData.isActive}
           selectedColor={formData.selectedColor}
+          selectedEmoji={formData.selectedEmoji}
           onColorChange={(color) =>
             setFormData({
               ...formData,
               selectedColor: color,
+              selectedEmoji: null,
+            })
+          }
+          onEmojiChange={(emoji) =>
+            setFormData({
+              ...formData,
+              selectedColor: getRandomColor(),
+              selectedEmoji: emoji,
             })
           }
           onOpen={() => {
