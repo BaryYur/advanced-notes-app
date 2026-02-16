@@ -1,5 +1,7 @@
 import { getHours } from "date-fns";
 
+import { COLORS } from "@/lib/data";
+
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -24,4 +26,8 @@ export const getCurrentDayPeriod = () => {
   }
 
   return dayPeriod;
+};
+
+export const getRandomColor = () => {
+  return COLORS[Math.floor(Math.random() * COLORS.length)];
 };

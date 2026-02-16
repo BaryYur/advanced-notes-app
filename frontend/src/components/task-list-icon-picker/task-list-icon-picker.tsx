@@ -11,19 +11,25 @@ import {
   TabsContent,
 } from "@/components";
 
+import { EmojiPicker } from "@ferrucc-io/emoji-picker";
+
 import { Plus, ChevronDown } from "lucide-react";
 
 interface TaskListIconPickerProps {
   isActive: boolean;
   selectedColor: string;
+  selectedEmoji: string | null;
   onColorChange: (color: string) => void;
+  onEmojiChange: (emoji: string) => void;
   onOpen: () => void;
 }
 
 export const TaskListIconPicker: React.FC<TaskListIconPickerProps> = ({
   isActive,
   selectedColor,
+  selectedEmoji,
   onColorChange,
+  onEmojiChange,
   onOpen,
 }) => {
   const tabs = useMemo(() => {
@@ -40,8 +46,25 @@ export const TaskListIconPicker: React.FC<TaskListIconPickerProps> = ({
       },
       {
         name: "Emoji",
-        title: "Emojis",
-        component: <div className="p-2">emojis</div>,
+        title: "Emoji",
+        component: (
+          <div className="w-[360px] pb-2">
+            <EmojiPicker
+              onEmojiSelect={onEmojiChange}
+              className="custom-scrollbar max-h-[300px] w-full border-none bg-transparent shadow-none"
+            >
+              <EmojiPicker.Header>
+                <EmojiPicker.Input
+                  placeholder="Search emoji"
+                  className="bg-zinc-100 py-5 pl-8"
+                />
+              </EmojiPicker.Header>
+              <EmojiPicker.Group className="custom-scrollbar mt-2">
+                <EmojiPicker.List hideStickyHeader={true} />
+              </EmojiPicker.Group>
+            </EmojiPicker>
+          </div>
+        ),
       },
     ];
   }, [selectedColor, onColorChange]);
@@ -49,18 +72,22 @@ export const TaskListIconPicker: React.FC<TaskListIconPickerProps> = ({
   return (
     <DropdownMenu onOpenChange={() => onOpen()}>
       <DropdownMenuTrigger asChild>
-        <button className={`${isActive ? "bg-gray-100" : ""} flex rounded-md`}>
+        <button
+          className={`${isActive ? "bg-gray-100" : ""} z-40 flex rounded-md`}
+        >
           <div
             className={`${isActive ? "" : "hidden"} flex items-center gap-2 rounded-lg px-2 py-2 transition-all duration-300 hover:bg-gray-100 group-hover:bg-gray-100`}
           >
-            {
+            {selectedEmoji ? (
+              <span className="text-xs">{selectedEmoji}</span>
+            ) : (
               <div>
                 <div
                   style={{ borderColor: selectedColor }}
                   className="h-2.5 w-2.5 rounded-sm border-[2px]"
                 />
               </div>
-            }
+            )}
             <ChevronDown size={15} />
           </div>
 
@@ -75,7 +102,7 @@ export const TaskListIconPicker: React.FC<TaskListIconPickerProps> = ({
         align="start"
         side="bottom"
         onClick={(event) => event.stopPropagation()}
-        className="z-50 mt-1.5 w-80 rounded-2xl border border-gray-200 bg-white p-1 text-sm/6 shadow-none"
+        className="z-50 mt-1.5 min-w-80 rounded-2xl border border-gray-200 bg-white p-1 text-sm/6 shadow-none"
       >
         <Tabs defaultValue={tabs[0].name}>
           <TabsList className="bg-transparent">

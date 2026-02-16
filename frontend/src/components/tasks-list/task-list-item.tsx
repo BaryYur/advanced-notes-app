@@ -113,7 +113,11 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
           )}
 
           {taskList && (
-            <ListIcon color={taskList.color} emoji={taskList.emoji} />
+            <ListIcon
+              color={taskList.color}
+              emoji={taskList.emoji}
+              emojiClassName="text-sm"
+            />
           )}
         </div>
 

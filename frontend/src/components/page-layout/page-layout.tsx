@@ -41,7 +41,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     return defaultPageData?.name || "";
   }, [pageType, defaultPageData]);
 
-  useGetPageTitle(tabName);
+  useGetPageTitle(`${tabName} | Notes app`);
 
   const formatCurrentDate = () => {
     return format(new Date(), "EEEE MMMM dd");

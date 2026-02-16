@@ -8,6 +8,11 @@ COMMIT_MSG_FILE=$1
 
 if [ ! -z "$TASK_ID" ]; then
   if ! grep -q "($TASK_ID)" "$COMMIT_MSG_FILE"; then
-    sed -i "1s/$/ ($TASK_ID)/" "$COMMIT_MSG_FILE"
+    # Read the first line, append the task ID, and overwrite the file
+    FIRST_LINE=$(head -n 1 "$COMMIT_MSG_FILE")
+    # For Windows compatibility, we ensure we don't use sed -i which can be buggy
+    echo "$FIRST_LINE ($TASK_ID)" > "$COMMIT_MSG_FILE.tmp"
+    tail -n +2 "$COMMIT_MSG_FILE" >> "$COMMIT_MSG_FILE.tmp"
+    mv "$COMMIT_MSG_FILE.tmp" "$COMMIT_MSG_FILE"
   fi
 fi
