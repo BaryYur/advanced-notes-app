@@ -93,8 +93,8 @@ const createTask = async (task: CreateTaskData): Promise<Task | null> => {
 
 interface UpdateTaskData {
   title?: string;
-  taskListId?: string;
-  date?: Date;
+  taskListId?: string | null;
+  date?: Date | null;
   completed?: boolean;
   note?: string;
   defaultIndex?: number;

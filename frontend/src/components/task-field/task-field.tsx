@@ -150,10 +150,10 @@ export const TaskField: React.FC<TaskFieldProps> = ({ values }) => {
       <div
         className={`${isFormActive ? "hidden" : "visible"} flex items-center gap-1 pr-3`}
       >
-        <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-300 p-1 text-sm text-gray-500">
+        <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-300 p-1 text-xs text-gray-500">
           <Command />
         </div>
-        <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-300 text-sm text-gray-500">
+        <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-300 text-xs text-gray-500">
           E
         </div>
       </div>
