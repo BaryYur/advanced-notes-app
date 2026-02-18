@@ -18,14 +18,16 @@ import { Check } from "lucide-react";
 type ListType = Omit<Omit<TaskList, "userId">, "tasksCounter">;
 
 interface TaskListDropdownProps {
-  onOpen: () => void;
-  onClose: () => void;
-  onInputFocus: () => void;
+  isTaskBar?: boolean;
+  onOpen?: () => void;
+  onClose?: () => void;
+  onInputFocus?: () => void;
   currentTaskList?: TaskList;
   onSelectList: (value: ListType) => void;
 }
 
 export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
+  isTaskBar = false,
   onOpen,
   onClose,
   onInputFocus,
@@ -50,8 +52,8 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
     if (list) {
       setSelectedTaskList(list);
       onSelectList(list);
-      onInputFocus();
-      onClose();
+      onInputFocus?.();
+      onClose?.();
     }
   };
 
@@ -84,17 +86,19 @@ export const TaskListDropdown: React.FC<TaskListDropdownProps> = ({
   return (
     <Select
       value={selectedTaskList.name}
-      onOpenChange={() => onOpen()}
+      onOpenChange={() => onOpen?.()}
       onValueChange={(value) => handleSelectList(value)}
     >
-      <SelectTrigger className="relative flex h-[30px] items-center gap-1 rounded-md border border-none border-red-400 bg-gray-100 px-2 py-0 shadow-none">
+      <SelectTrigger
+        className={`${isTaskBar ? "bg-white" : "bg-gray-100"} relative flex h-[30px] items-center gap-1 rounded-md border border-none border-red-400 px-2 py-0 shadow-none`}
+      >
         <SelectValue placeholder="List" />
       </SelectTrigger>
       <SelectContent
         align="end"
         side="bottom"
         onCloseAutoFocus={(event) => event.preventDefault()}
-        className="mt-2.5 rounded-xl"
+        className={`${isTaskBar ? "mt-1" : "mt-2.5"} rounded-xl shadow-none`}
       >
         <SelectGroup>
           {lists.map((list) => (

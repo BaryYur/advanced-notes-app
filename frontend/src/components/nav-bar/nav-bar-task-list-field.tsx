@@ -185,10 +185,10 @@ export const NavBarTaskListField: React.FC<NavBarCreateTaskListFieldProps> = ({
             <div
               className={`${formData.isActive ? "hidden" : "visible"} absolute right-0 top-0 flex items-center gap-1`}
             >
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-100 p-1 text-sm text-gray-500">
+              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-100 p-1 text-xs text-gray-500">
                 <Command />
               </div>
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-100 text-sm text-gray-500">
+              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gray-100 text-xs text-gray-500">
                 D
               </div>
             </div>

@@ -4,7 +4,7 @@ import { TaskList } from "@/types";
 
 import { TaskSupabaseService } from "@/services";
 
-import { Checkbox, ListIcon } from "@/components";
+import { Checkbox, ListIcon, TaskPanel } from "@/components";
 import { SortableList } from "./sortable-list";
 import { TaskListItemDropdown } from "./task-list-item-dropdown";
 
@@ -38,8 +38,7 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
-
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const handleCompleteTask = async (
     event: React.FormEvent<HTMLButtonElement>,
@@ -56,24 +55,18 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
 
   return (
     <>
-      <motion.div
-        key={id}
-        className={`${index === 0 && "rounded-t-xl"} ${isLast && "rounded-b-xl"} group relative z-20 flex h-12 w-full cursor-pointer items-center justify-between overflow-hidden rounded-md bg-white p-3`}
-        layoutId={id}
-        // onClick={() => {
-        //   console.log(id);
-        //   // setIsModalOpen(true);
-        // }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      <div
+        onClick={() => setIsPanelOpen(true)}
+        className={`${index === 0 ? "rounded-t-xl" : ""} ${isLast ? "rounded-b-xl" : ""} group relative z-20 flex h-12 w-full cursor-pointer items-center justify-between overflow-hidden rounded-md bg-white p-3`}
       >
         <div>
-          <div className="relative z-30 flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <Checkbox
               checked={completed || isCompleting}
               onClick={handleCompleteTask}
-              className="h-[18px] w-[18px] rounded-md border-transparent bg-gray-200 shadow-none"
+              className="relative z-30 h-[18px] w-[18px] rounded-md border-transparent bg-gray-200 shadow-none"
             />
-            <div className="relative flex items-center">
+            <div className="flex items-center">
               <span
                 className={`${(completed || isCompleting) && "text-zinc-500"} relative z-10 max-w-[440px] truncate text-sm transition-colors duration-300`}
               >
@@ -92,6 +85,7 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
         <TaskListItemDropdown
           taskId={id}
           isOpen={isDropdownOpen}
+          onOpenTaskPanel={() => setIsPanelOpen(true)}
           toggleOpen={() => setIsDropdownOpen((active) => !active)}
         />
 
@@ -122,13 +116,20 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
         </div>
 
         <SortableList.DragHandle />
-      </motion.div>
+      </div>
 
-      {/* <TaskModal
-        id={id}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      /> */}
+      <TaskPanel
+        data={{
+          id,
+          title,
+          completed,
+          date: date ?? null,
+          note,
+          taskList: taskList ?? undefined,
+        }}
+        isOpen={isPanelOpen}
+        onClose={() => setIsPanelOpen(false)}
+      />
     </>
   );
 };

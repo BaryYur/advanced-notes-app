@@ -141,9 +141,18 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
   }, [recoveryEmail, navigate, location.pathname]);
 
   const headingTitle = {
-    signIn: "Sign in",
-    signUp: "Sign up",
-    resetPassword: "Reset password",
+    signIn: {
+      title: "Sign in",
+      description: "Welcome back! Please enter your details.",
+    },
+    signUp: {
+      title: "Sign up",
+      description: "Create an account to get started.",
+    },
+    resetPassword: {
+      title: "Reset password",
+      description: "Enter code and set a new password.",
+    },
   };
 
   return (
@@ -156,8 +165,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
 
           <div className="mt-8 w-[430px] rounded-3xl bg-card p-10 shadow-xl">
             <h2 className="text-xl font-semibold">
-              {headingTitle[authPageType]}
+              {headingTitle[authPageType].title}
             </h2>
+
+            <p className="text-sm text-gray-500">
+              {headingTitle[authPageType].description}
+            </p>
 
             <form onSubmit={submitHandler} className="mt-3 flex flex-col gap-2">
               {authPageType === "signUp" && (

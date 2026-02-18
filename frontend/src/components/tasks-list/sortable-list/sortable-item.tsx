@@ -4,24 +4,24 @@ import type { CSSProperties, PropsWithChildren } from "react";
 import type {
   DraggableSyntheticListeners,
   UniqueIdentifier,
+  DraggableAttributes,
 } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 
 import { CSS } from "@dnd-kit/utilities";
-// import { GripVertical } from "lucide-react";
 
 interface Props {
   id: UniqueIdentifier;
 }
 
 interface Context {
-  attributes: Record<string, any>;
+  attributes: DraggableAttributes;
   listeners: DraggableSyntheticListeners;
   ref(node: HTMLElement | null): void;
 }
 
 const SortableItemContext = createContext<Context>({
-  attributes: {},
+  attributes: {} as DraggableAttributes,
   listeners: undefined,
   ref() {},
 });
@@ -52,7 +52,7 @@ export const SortableItem = ({ children, id }: PropsWithChildren<Props>) => {
 
   return (
     <SortableItemContext.Provider value={context}>
-      <li ref={setNodeRef} style={style} className="relative z-10 list-none">
+      <li ref={setNodeRef} style={style} className="list-none">
         {children}
       </li>
     </SortableItemContext.Provider>
@@ -68,9 +68,6 @@ export const DragHandle = () => {
       {...listeners}
       ref={ref}
       className="absolute left-0 top-0 z-10 h-full w-full"
-      // className="absolute left-2 inset-y-1"
-    >
-      {/* <GripVertical size={15} /> */}
-    </button>
+    />
   );
 };
