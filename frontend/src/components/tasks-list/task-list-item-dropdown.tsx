@@ -1,4 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
+
+import { AuthContext, TaskContext } from "@/context";
 
 import { TaskSupabaseService } from "@/services";
 
@@ -16,34 +18,61 @@ interface Action {
   id: number;
   title: string;
   icon: JSX.Element;
-  action: (event?: React.FormEvent<HTMLButtonElement>) => void;
+  action: (event: React.FormEvent<HTMLButtonElement>) => void;
 }
 
 interface TaskListItemDropdownProps {
-  taskId: string;
+  taskData: {
+    id: string;
+    title: string;
+    completed: boolean;
+    date?: Date;
+    note: string;
+    taskListId: string | null;
+  };
   toggleOpen: () => void;
   isOpen: boolean;
+  onClose: () => void;
   onOpenTaskPanel: () => void;
 }
 
 export const TaskListItemDropdown: React.FC<TaskListItemDropdownProps> = ({
-  taskId,
+  taskData,
   toggleOpen,
   isOpen,
+  onClose,
   onOpenTaskPanel,
 }) => {
-  const handleDuplicateTask = (event?: React.FormEvent<HTMLButtonElement>) => {
-    event?.stopPropagation();
+  const { user } = useContext(AuthContext);
+  const { deleteTask } = useContext(TaskContext);
 
-    // duplicate task
+  const handleDuplicateTask = async (
+    event: React.FormEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
+
+    onClose();
+
+    if (user) {
+      await TaskSupabaseService.duplicateTask({
+        title: taskData.title,
+        completed: taskData.completed,
+        date: taskData.date,
+        note: taskData.note,
+        taskListId: taskData.taskListId,
+        userId: user.id,
+      });
+    }
   };
 
   const handleDeleteTask = async (
-    event?: React.FormEvent<HTMLButtonElement>,
+    event: React.FormEvent<HTMLButtonElement>,
   ) => {
-    event?.stopPropagation();
+    event.stopPropagation();
 
-    await TaskSupabaseService.deleteTask(taskId);
+    onClose();
+
+    await deleteTask(taskData.id);
   };
 
   const actions: Action[] = useMemo(() => {
@@ -52,22 +81,22 @@ export const TaskListItemDropdown: React.FC<TaskListItemDropdownProps> = ({
         id: 1,
         title: "Edit",
         icon: <Edit2 size={14} />,
-        action: onOpenTaskPanel,
+        action: () => onOpenTaskPanel(),
       },
       {
         id: 2,
         title: "Duplicate",
         icon: <Copy size={14} />,
-        action: (event) => handleDuplicateTask(event),
+        action: handleDuplicateTask,
       },
       {
         id: 3,
         title: "Delete",
         icon: <Trash2 size={14} />,
-        action: (event) => handleDeleteTask(event),
+        action: handleDeleteTask,
       },
     ] as const;
-  }, [handleDeleteTask, onOpenTaskPanel]);
+  }, [handleDeleteTask, onOpenTaskPanel, handleDuplicateTask]);
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={() => toggleOpen()}>

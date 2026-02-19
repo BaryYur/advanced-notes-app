@@ -126,6 +126,32 @@ const updateTask = async (
   return data;
 };
 
+interface DuplicateTaskData {
+  userId: string;
+  title: string;
+  taskListId?: string | null;
+  date?: Date;
+  completed: boolean;
+  note: string;
+}
+
+const duplicateTask = async (taskData: DuplicateTaskData) => {
+  const { data, error } = await supabase
+    .from("task")
+    .insert({
+      ...taskData,
+      date: taskData.date ? format(taskData.date, "yyyy-MM-dd") : undefined,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    handleApiError(error);
+  }
+
+  return data;
+};
+
 const deleteTask = async (id: string): Promise<void> => {
   const { error } = await supabase.from("task").delete().eq("id", id);
 
@@ -138,5 +164,6 @@ export const TaskSupabaseService = {
   createTask,
   updateTask,
   getAllTasks,
+  duplicateTask,
   deleteTask,
 };
