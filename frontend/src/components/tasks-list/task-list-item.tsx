@@ -57,7 +57,7 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
     <>
       <div
         onClick={() => setIsPanelOpen(true)}
-        className={`${index === 0 ? "rounded-t-xl" : ""} ${isLast ? "rounded-b-xl" : ""} group relative z-20 flex h-12 w-full cursor-pointer items-center justify-between overflow-hidden rounded-md bg-white p-3`}
+        className={`${index === 0 ? "rounded-t-xl" : ""} ${isLast ? "rounded-b-xl" : ""} ${isPanelOpen ? "bg-white/60" : ""} group relative z-20 flex h-12 w-full cursor-pointer items-center justify-between overflow-hidden rounded-md bg-white p-3`}
       >
         <div>
           <div className="flex items-center gap-3">
@@ -83,9 +83,17 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
         </div>
 
         <TaskListItemDropdown
-          taskId={id}
+          taskData={{
+            id,
+            title,
+            completed,
+            date: date,
+            note,
+            taskListId: taskList?.id ?? null,
+          }}
           isOpen={isDropdownOpen}
           onOpenTaskPanel={() => setIsPanelOpen(true)}
+          onClose={() => setIsDropdownOpen(false)}
           toggleOpen={() => setIsDropdownOpen((active) => !active)}
         />
 

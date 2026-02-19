@@ -34,6 +34,20 @@ export const TaskContextProvider = ({
     }
   };
 
+  const deleteTask = async (taskId: string) => {
+    setTasks((prev) => {
+      const newTasks = { ...prev };
+
+      Object.keys(newTasks).forEach((key) => {
+        newTasks[key] = newTasks[key].filter((task) => task.id !== taskId);
+      });
+
+      return newTasks;
+    });
+
+    await TaskSupabaseService.deleteTask(taskId);
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -61,7 +75,7 @@ export const TaskContextProvider = ({
   }, [user]);
 
   return (
-    <TaskContext.Provider value={{ tasks, getAllTasks }}>
+    <TaskContext.Provider value={{ tasks, getAllTasks, deleteTask }}>
       {children}
     </TaskContext.Provider>
   );
