@@ -59,7 +59,7 @@ export const TaskListItemDropdown: React.FC<TaskListItemDropdownProps> = ({
         completed: taskData.completed,
         date: taskData.date,
         note: taskData.note,
-        taskListId: taskData.taskListId,
+        taskListId: taskData.taskListId ?? undefined,
         userId: user.id,
       });
     }

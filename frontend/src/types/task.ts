@@ -6,10 +6,11 @@ export interface Task {
   taskListId?: string;
   completed: boolean;
   note: string;
-  defaultIndex: number | null;
-  homeIndex: number;
-  completedIndex: number | null;
   date: Date;
   createdAt: Date;
   taskList: TaskList;
+  taskOrder: {
+    context: string;
+    position: number;
+  }[];
 }

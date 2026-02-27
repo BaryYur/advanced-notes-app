@@ -81,19 +81,17 @@ export const TaskField: React.FC<TaskFieldProps> = ({ values }) => {
 
     if (!user) return;
 
-    const newTask = await TaskSupabaseService.createTask({
+    setTask({
+      ...task,
+      title: "",
+    });
+
+    await TaskSupabaseService.createTask({
       userId: user.id,
       title: task.title,
       taskListId: task.listId !== "" ? task.listId : undefined,
       date: task.date,
     });
-
-    if (newTask) {
-      setTask({
-        ...task,
-        title: "",
-      });
-    }
   };
 
   useEffect(() => {

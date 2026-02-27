@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import { AuthContext } from "@/context";
 
 import { TaskList } from "@/types";
 
@@ -36,6 +38,8 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
   note,
   taskList,
 }) => {
+  const { user } = useContext(AuthContext);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -46,9 +50,11 @@ export const TaskListItem: React.FC<TaskListItemProps> = ({
     event.stopPropagation();
     setIsCompleting(true);
 
-    await TaskSupabaseService.updateTask(id, {
-      completed: !completed,
-    });
+    if (user) {
+      await TaskSupabaseService.updateTask(id, user.id, {
+        completed: !completed,
+      });
+    }
   };
 
   const isExpired = date ? isBefore(date, new Date()) : false;

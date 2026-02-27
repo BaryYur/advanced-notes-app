@@ -1,3 +1,7 @@
+import { useContext } from "react";
+
+import { TaskContext } from "@/context";
+
 import { ListType } from "@/types";
 
 import { useGetTaskList } from "@/hooks";
@@ -10,6 +14,7 @@ import {
 } from "@/components";
 
 export const TaskListPage = () => {
+  const { setTasks } = useContext(TaskContext);
   const { taskList, tasks } = useGetTaskList();
 
   return (
@@ -27,8 +32,14 @@ export const TaskListPage = () => {
           >
             <TaskField listType={ListType.Default} values={{ taskList }} />
             <TasksList
+              listId={taskList.id}
               tasks={tasks ?? []}
-              setTasks={(tasks) => console.log(tasks)}
+              setTasks={(updatedTasks) => {
+                setTasks((prevTasks) => ({
+                  ...prevTasks,
+                  [taskList.name]: updatedTasks,
+                }));
+              }}
             />
           </PageLayout>
 

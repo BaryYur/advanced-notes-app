@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { TaskSupabaseService } from "@/services";
 
@@ -16,11 +16,17 @@ export const TaskContextProvider = ({
 }) => {
   const { user } = useContext(AuthContext);
 
+  const lastDraggingUpdate = useRef<number>(0);
+
   const [tasks, setTasks] = useState<AppTasks>({
     [ListType.Home]: [],
     [ListType.Today]: [],
     [ListType.Completed]: [],
   });
+
+  const setIgnoreRealtime = () => {
+    lastDraggingUpdate.current = Date.now();
+  };
 
   const getAllTasks = async () => {
     if (user) {
@@ -63,7 +69,20 @@ export const TaskContextProvider = ({
           table: "task",
           filter: `userId=eq.${user.id}`,
         },
-        () => {
+        (payload) => {
+          if (payload.eventType !== "UPDATE") {
+            getAllTasks();
+            return;
+          }
+
+          const now = Date.now();
+          const secondsSinceLastDrag =
+            (now - lastDraggingUpdate.current) / 1000;
+
+          if (secondsSinceLastDrag < 2.5) {
+            return;
+          }
+
           getAllTasks();
         },
       )
@@ -75,7 +94,9 @@ export const TaskContextProvider = ({
   }, [user]);
 
   return (
-    <TaskContext.Provider value={{ tasks, getAllTasks, deleteTask }}>
+    <TaskContext.Provider
+      value={{ tasks, setTasks, getAllTasks, deleteTask, setIgnoreRealtime }}
+    >
       {children}
     </TaskContext.Provider>
   );
