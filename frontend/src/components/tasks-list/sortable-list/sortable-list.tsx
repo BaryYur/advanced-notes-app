@@ -27,7 +27,7 @@ interface BaseItem {
 
 interface SortableListProps<T extends BaseItem> {
   items: T[];
-  onChange(listType: ListType, items: T[]): void;
+  onChange(movedTaskId: string, listType: ListType, items: T[]): void;
   renderItem(item: T, index: number): ReactNode;
 }
 
@@ -75,9 +75,11 @@ export const SortableList = <T extends BaseItem>({
             listType = ListType.Today;
           }
 
-          onChange(listType, arrayMove(items, activeIndex, overIndex));
-
-          // console.log("page type", params["*"], items.map((item, index) => ({ ...item, index }))); // update indexes by socket
+          onChange(
+            active.id as string,
+            listType,
+            arrayMove(items, activeIndex, overIndex),
+          );
         }
 
         setActive(null);

@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
+
+import { AuthContext } from "@/context";
 
 import { createPortal } from "react-dom";
 
@@ -29,6 +37,8 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { user } = useContext(AuthContext);
+
   const [task, setTask] = useState({
     ...data,
     taskListId: data.taskList?.id ?? null,
@@ -50,18 +60,60 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
   }, [task.title, isTitleTextareaFocused]);
 
   const handleCompleteTask = () => {
-    setTask({ ...task, completed: !task.completed });
+    if (user) {
+      onClose();
+
+      TaskSupabaseService.updateTask(data.id, user.id, {
+        completed: !task.completed,
+      });
+    }
   };
 
-  const handleUpdateTask = useCallback(async () => {
-    await TaskSupabaseService.updateTask(data.id, {
-      title: task.title,
-      completed: task.completed,
-      date: task.date,
-      note: task.note,
-      taskListId: task.taskListId,
-    });
-  }, [data.id, task]);
+  const handleUpdateTaskList = (listId: string | null) => {
+    if (user) {
+      const listIdValue = listId === "" ? null : listId;
+
+      if (data.taskList) onClose();
+
+      setTask({
+        ...task,
+        taskListId: listIdValue,
+      });
+
+      TaskSupabaseService.updateTask(data.id, user.id, {
+        taskListId: listIdValue,
+      });
+    }
+  };
+
+  const updateTaskDate = (date: Date | undefined) => {
+    if (user) {
+      const dateValue = date ? date : null;
+
+      setTask({
+        ...task,
+        date: dateValue,
+      });
+
+      TaskSupabaseService.updateTask(
+        data.id,
+        user.id,
+        {
+          date: dateValue,
+        },
+        data.date,
+      );
+    }
+  };
+
+  const handleUpdateTaskTitleOrNote = useCallback(async () => {
+    if (user) {
+      await TaskSupabaseService.updateTask(data.id, user.id, {
+        title: task.title,
+        note: task.note,
+      });
+    }
+  }, [data.id, task.title, task.note, user]);
 
   const handleUpdateTitle = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTask({ ...task, title: event.target.value });
@@ -77,8 +129,12 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
   }, [data.id, onClose]);
 
   useEffect(() => {
-    handleUpdateTask();
-  }, [handleUpdateTask]);
+    const timer = setTimeout(() => {
+      handleUpdateTaskTitleOrNote();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [handleUpdateTaskTitleOrNote]);
 
   return createPortal(
     <>
@@ -96,7 +152,7 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
           onClick={onClose}
           variant="ghost"
           size="sm"
-          className="h-6.5 w-7.5 absolute right-2 top-2 text-zinc-500"
+          className="h-6.5 w-7.5 absolute right-2 top-2 text-zinc-500 hover:bg-transparent"
         >
           <X size={16} strokeWidth={2.2} />
         </Button>
@@ -132,12 +188,7 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
                   <TaskListDropdown
                     isTaskBar
                     currentTaskList={task.taskList}
-                    onSelectList={(value) => {
-                      setTask({
-                        ...task,
-                        taskListId: value.id === "" ? null : value.id,
-                      });
-                    }}
+                    onSelectList={(value) => handleUpdateTaskList(value.id)}
                   />
                 </div>
               </div>
@@ -146,9 +197,7 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
                 <DatePickerDropdown
                   value={task.date}
                   isTaskBar
-                  onSelect={(value) =>
-                    setTask({ ...task, date: value ? value : null })
-                  }
+                  onSelect={(value) => updateTaskDate(value)}
                 />
               </div>
             </div>

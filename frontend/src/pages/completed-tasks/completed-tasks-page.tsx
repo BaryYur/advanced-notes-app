@@ -7,14 +7,19 @@ import { ListType } from "@/types";
 import { BackgroundWrapper, PageLayout, TasksList } from "@/components";
 
 export const CompletedTasksPage = () => {
-  const { tasks } = useContext(TaskContext);
+  const { tasks, setTasks } = useContext(TaskContext);
 
   return (
     <>
       <PageLayout pageType={ListType.Completed}>
         <TasksList
           tasks={tasks[ListType.Completed]}
-          setTasks={(tasks) => console.log(tasks)}
+          setTasks={(tasks) => {
+            setTasks((prevTasks) => ({
+              ...prevTasks,
+              [ListType.Completed]: tasks,
+            }));
+          }}
         />
       </PageLayout>
 

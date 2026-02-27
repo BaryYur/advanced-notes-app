@@ -50,20 +50,29 @@ model TaskList {
 }
 
 model Task {
-  id             String    @id @default(dbgenerated("gen_random_uuid()"))
-  userId         String
-  title          String
-  taskListId     String?
-  completed      Boolean   @default(false)
-  note           String    @default("")
-  taskList       TaskList? @relation("TaskListToTask", fields: [taskListId], references: [id], onDelete: Cascade)
-  date           DateTime?
-  createdAt      DateTime  @default(now())
-  homeIndex      Float     @default(0)
-  todayIndex     Float?
-  completedIndex Float?
-  defaultIndex   Float?
+  id         String      @id @default(dbgenerated("gen_random_uuid()"))
+  userId     String
+  title      String
+  taskListId String?
+  completed  Boolean     @default(false)
+  note       String      @default("")
+  taskList   TaskList?   @relation("TaskListToTask", fields: [taskListId], references: [id], onDelete: Cascade)
+  date       DateTime?
+  createdAt  DateTime    @default(now())
+  taskOrders TaskOrder[]
 
   @@map("task")
 }
 
+model TaskOrder {
+  id       String @id @default(dbgenerated("gen_random_uuid()"))
+  taskId   String
+  userId   String
+  context  String
+  position Float
+  task     Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, context])
+  @@index([userId, context])
+  @@map("task_order")
+}

@@ -12,7 +12,7 @@ import {
 } from "@/components";
 
 export const HomePage = () => {
-  const { tasks } = useContext(TaskContext);
+  const { tasks, setTasks } = useContext(TaskContext);
 
   return (
     <>
@@ -20,7 +20,12 @@ export const HomePage = () => {
         <TaskField listType={ListType.Home} />
         <TasksList
           tasks={tasks[ListType.Home]}
-          setTasks={(tasks) => console.log(tasks)}
+          setTasks={(updatedTasks) =>
+            setTasks((prevTasks) => ({
+              ...prevTasks,
+              [ListType.Home]: updatedTasks,
+            }))
+          }
         />
       </PageLayout>
 

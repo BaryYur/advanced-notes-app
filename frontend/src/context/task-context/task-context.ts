@@ -11,8 +11,10 @@ export interface AppTasks {
 
 type TaskContextType = {
   tasks: AppTasks;
+  setTasks: React.Dispatch<React.SetStateAction<AppTasks>>;
   getAllTasks: () => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
+  setIgnoreRealtime: () => void;
 };
 
 export const TaskContext = createContext({} as TaskContextType);
