@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 
 import { AuthContext } from "@/context";
 
-// import { useUpdateUserInfo } from "@/hooks";
+// import { useUpdateUserInfo } from "@/hooks";git add .
 
 import { Input, Button } from "@/components";
 
