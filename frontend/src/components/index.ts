@@ -9,3 +9,4 @@ export * from "./task-field";
 export * from "./tasks-list/tasks-list";
 export * from "./list-icon/list-icon";
 export * from "./task-panel/task-panel";
+export * from "./settings";
