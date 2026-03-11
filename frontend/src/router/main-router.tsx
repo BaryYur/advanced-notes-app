@@ -21,10 +21,7 @@ export const MainRouter = () => {
           element={<CompletedTasksPage />}
         />
         <Route path="/:name" element={<TaskListPage />} />
-        <Route
-          path={pageRoutes.notFound} // or not include name from users list
-          element={<NotFoundPage />}
-        />
+        <Route path={pageRoutes.notFound} element={<NotFoundPage />} />
       </Routes>
     </>
   );

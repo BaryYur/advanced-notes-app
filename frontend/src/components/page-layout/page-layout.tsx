@@ -52,7 +52,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   const pageHeadings = {
     [ListType.Home]: (
       <>
-        <h1 className="text-xl">
+        <h1 className="text-xl font-medium">
           Good {getCurrentDayPeriod()} {user?.firstName},
         </h1>
         <p className="text-lg font-medium text-zinc-400/80">

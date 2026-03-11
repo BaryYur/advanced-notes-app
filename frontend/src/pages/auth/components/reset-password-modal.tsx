@@ -13,6 +13,7 @@ import {
   DialogFooter,
   DialogTitle,
   DialogDescription,
+  Input,
 } from "@/components";
 
 import toast from "react-hot-toast";
@@ -67,11 +68,11 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
             <DialogDescription className="text-sm text-zinc-400">
               It sends verification code to your email
             </DialogDescription>
-            <input
+            <Input
               value={resetPasswordEmail}
               disabled={isSendingPending}
               onChange={(event) => setResetPasswordEmail(event.target.value)}
-              className="mt-5 w-full rounded-xl border bg-gray-200/30 p-3 focus:border-blue-400 disabled:opacity-60"
+              className="mt-5 w-full rounded-lg bg-gray-200/30 p-3 text-sm"
               placeholder="Enter your email"
             />
           </div>

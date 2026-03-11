@@ -14,9 +14,11 @@ export default {
         xs: "calc(var(--radius) - 6px)",
       },
       colors: {
+        main: "hsl(var(--main-background))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        // body: { background: 'hsl(var(--body-background))'},
+        body: { background: 'hsl(var(--body-background))'},
+        navBar: { background: 'hsl(var(--main-background))'},
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

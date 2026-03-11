@@ -4,13 +4,12 @@ import { cn } from "@/lib/utils";
 
 import { EyeOff, EyeIcon } from "lucide-react";
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  withHideIcon?: boolean;
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  isHideIconVisible?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ withHideIcon, ...props }, ref) => {
+  ({ isHideIconVisible, ...props }, ref) => {
     const [passwordInputType, setPasswordInputType] = useState<
       "password" | "text"
     >("password");
@@ -28,18 +27,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           {...props}
           ref={ref}
-          type={withHideIcon ? passwordInputType : props.type}
+          type={isHideIconVisible ? passwordInputType : props.type}
           className={cn(
-            "duration-900 w-full border transition-all focus:border-blue-400",
+            "duration-900 w-full border-2 transition-all focus:border-blue-400",
             props.className,
           )}
         />
 
-        {withHideIcon && (
+        {isHideIconVisible && (
           <button
             type="button"
             onClick={changePasswordInputTypeHandler}
-            className="absolute inset-y-1 right-1 top-1 rounded-r-xl p-3"
+            className="absolute inset-y-1 right-1 top-1 rounded-r-xl px-3"
           >
             {passwordInputType === "password" ? (
               <EyeOff strokeWidth={1.5} size={20} />

@@ -15,7 +15,7 @@ export const NavBar = () => {
   const { tasks } = useContext(TaskContext);
 
   return (
-    <div className="fixed bottom-2.5 left-2.5 top-2.5 z-40 flex h-[calc(100%-20px)] w-[calc(100%-20px)] flex-col justify-between rounded-3xl bg-white p-9 shadow transition-all sm:w-[345px]">
+    <div className="fixed bottom-2.5 left-2.5 top-2.5 z-40 flex h-[calc(100%-20px)] w-[calc(100%-20px)] flex-col justify-between rounded-3xl bg-main p-9 shadow transition-all sm:w-[345px]">
       {isUserPending ? (
         <>
           <div className="flex flex-col gap-2">

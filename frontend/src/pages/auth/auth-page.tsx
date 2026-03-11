@@ -207,7 +207,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ authPageType }) => {
                   <Input
                     disabled={disabledFormField}
                     placeholder="Password"
-                    withHideIcon
+                    isHideIconVisible
                     value={formData.password}
                     type="password"
                     name="password"
