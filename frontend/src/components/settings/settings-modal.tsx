@@ -1,4 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
+
+import { AuthContext } from "@/context";
+
+import { UserAuthType } from "@/types";
 
 import {
   Dialog,
@@ -8,7 +12,11 @@ import {
   DialogOverlay,
   SettingsTabs,
 } from "@/components";
-import { SettingsUserDetails } from "./settings-user-details";
+import {
+  SettingsUserDetailsTab,
+  SettingsPasswordTab,
+  SettingsAppearenceTab,
+} from "../settings";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -19,40 +27,42 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { user } = useContext(AuthContext);
+
   const tabs = useMemo(
     () => [
       {
         name: "personal",
         title: "Personal",
-        component: <SettingsUserDetails />,
+        component: <SettingsUserDetailsTab onCloseModal={onClose} />,
       },
-      {
-        name: "password",
-        title: "Password",
-        component: <>Password</>,
-      },
+      ...(user?.authType === UserAuthType.EMAIL
+        ? [
+            {
+              name: "password",
+              title: "Password",
+              component: <SettingsPasswordTab />,
+            },
+          ]
+        : []),
       {
         name: "appearance",
         title: "Appearance",
-        component: <>Themes</>,
-      },
-      {
-        name: "shortcuts",
-        title: "Shortcuts",
-        component: <>Shortcuts</>,
+        component: <SettingsAppearenceTab />,
       },
     ],
-    [],
+    [user],
   );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay className="bg-white/60" />
+      <DialogOverlay className="bg-main/60" />
       <DialogContent
         isOverlayVisible={false}
-        className="h-[80%] max-w-[800px] overflow-hidden border-none bg-white px-0 shadow-sm sm:rounded-xl md:rounded-3xl"
+        className="h-[80%] max-w-[860px] overflow-hidden border-none bg-main px-0 shadow-sm sm:rounded-xl md:rounded-3xl"
+        closeClassName="right-6 top-6"
       >
-        <div className="pl-5">
+        <div className="px-5">
           <DialogTitle className="text-2xl font-medium">Settings</DialogTitle>
           <DialogDescription className="text-sm text-zinc-400" />
 

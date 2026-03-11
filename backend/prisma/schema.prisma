@@ -13,13 +13,6 @@ enum UserAuthType {
   google
 }
 
-enum TaskListType {
-  home
-  today
-  completed
-  default
-}
-
 model User {
   id                         String       @id @default(uuid())
   firstName                  String
@@ -32,6 +25,13 @@ model User {
   taskLists                  TaskList[]   @relation("UserToTaskList")
 
   @@map("user")
+}
+
+enum TaskListType {
+  home
+  today
+  completed
+  default
 }
 
 model TaskList {

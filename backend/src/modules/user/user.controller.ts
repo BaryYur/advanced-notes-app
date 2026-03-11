@@ -18,7 +18,7 @@ import { RequestWithUser } from "../../common/types";
 
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { UserDto, UpdateUserDto } from "./dto";
+import { UserDto, UpdateUserDto, UpdatePasswordDto } from "./dto";
 
 @ApiTags("User")
 @Controller("user")
@@ -55,6 +55,24 @@ export class UserController {
     @Body() dto: UpdateUserDto,
   ) {
     return this.userService.updateUserInfo(req.user.id, dto);
+  }
+
+  @ApiBearerAuth("accessToken")
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: "Change currently authenticated user password" })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiResponse({
+    status: 200,
+    description: "Returns the updated user information",
+    type: UserDto,
+  })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @Patch("/password")
+  public async changePassword(
+    @Req() req: RequestWithUser,
+    @Body() dto: UpdatePasswordDto,
+  ) {
+    return this.userService.changePassword(req.user.id, dto);
   }
 
   @ApiBearerAuth("accessToken")

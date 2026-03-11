@@ -23,8 +23,18 @@ const deleteUser = async () => {
   await apiClient.delete("/user");
 };
 
+export interface UpdateUserPasswordData {
+  oldPassword: string;
+  newPassword: string;
+}
+
+const updateUserPassword = async (data: UpdateUserPasswordData) => {
+  await apiClient.patch("/user/password", data);
+};
+
 export const UserApiService = {
   getUser,
   updateUserInfo,
   deleteUser,
+  updateUserPassword,
 };

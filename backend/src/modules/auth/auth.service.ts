@@ -18,8 +18,9 @@ import {
   ResetPasswordDto,
 } from "./dto";
 
-import * as bcrypt from "bcrypt";
 import { DatabaseService } from "../database";
+
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {

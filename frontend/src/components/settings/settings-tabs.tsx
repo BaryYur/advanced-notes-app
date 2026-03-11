@@ -16,7 +16,7 @@ export const SettingsTabs: React.FC<SettingsTabsProps> = ({ tabs }) => {
           <TabsTrigger
             key={tab.name}
             value={tab.name}
-            className="flex w-[170px] justify-start rounded-md px-3 py-2 shadow-none"
+            className="flex w-[200px] justify-start rounded-md px-3 py-2 shadow-none hover:bg-gray-100"
           >
             {tab.title}
           </TabsTrigger>

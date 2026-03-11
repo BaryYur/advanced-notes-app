@@ -46,7 +46,7 @@ export const NavBarUserDropdown = () => {
         <DropdownMenuContent
           align="end"
           side="top"
-          className="absolute -bottom-[60px] -right-[260px] z-50 w-64 rounded-xl border border-gray-200 bg-white p-1.5 text-sm/6 shadow-none transition duration-100 ease-out"
+          className="absolute -bottom-[60px] -right-[260px] z-50 w-64 rounded-xl border border-gray-200 bg-main p-1.5 text-sm/6 shadow-none transition duration-100 ease-out"
         >
           <div className="pb-2">{userBox}</div>
 

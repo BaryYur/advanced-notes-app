@@ -12,7 +12,7 @@ export class ResetPasswordDto {
 
   @ApiProperty({
     example: 123456,
-    description: "The verification code sent to the email",
+    description: "The verification code sent to the mail",
   })
   @IsNumber()
   verificationCode: number;

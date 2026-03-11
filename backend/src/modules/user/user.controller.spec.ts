@@ -10,6 +10,9 @@ describe("UserController", () => {
 
   const mockUserService = {
     findUserById: jest.fn(),
+    updateUserInfo: jest.fn(),
+    deleteUser: jest.fn(),
+    changePassword: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -39,6 +42,45 @@ describe("UserController", () => {
 
       expect(userService.findUserById).toHaveBeenCalledWith("1");
       expect(result).toEqual(user);
+    });
+  });
+
+  describe("updateUserInfo", () => {
+    it("should update and return user info", async () => {
+      const dto = { firstName: "Updated", lastName: "Name" };
+      const updatedUser = { id: "1", email: "test@test.com", ...dto };
+      mockUserService.updateUserInfo.mockResolvedValue(updatedUser);
+
+      const req = { user: { id: "1" } } as RequestWithUser;
+      const result = await controller.updateUserInfo(req, dto);
+
+      expect(userService.updateUserInfo).toHaveBeenCalledWith("1", dto);
+      expect(result).toEqual(updatedUser);
+    });
+  });
+
+  describe("deleteUser", () => {
+    it("should delete user", async () => {
+      mockUserService.deleteUser.mockResolvedValue(undefined);
+
+      const req = { user: { id: "1" } } as RequestWithUser;
+      await controller.deleteUser(req);
+
+      expect(userService.deleteUser).toHaveBeenCalledWith("1");
+    });
+  });
+
+  describe("changePassword", () => {
+    it("should call changePassword on service and return the result", async () => {
+      const dto = { oldPassword: "old", newPassword: "new" };
+      const resultUser = { id: "1", email: "test@test.com" };
+      mockUserService.changePassword.mockResolvedValue(resultUser);
+
+      const req = { user: { id: "1" } } as RequestWithUser;
+      const result = await controller.changePassword(req, dto);
+
+      expect(userService.changePassword).toHaveBeenCalledWith("1", dto);
+      expect(result).toEqual(resultUser);
     });
   });
 });
