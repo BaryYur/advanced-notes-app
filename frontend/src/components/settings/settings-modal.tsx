@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
-  DialogOverlay,
   SettingsTabs,
 } from "@/components";
 import {
@@ -56,10 +55,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay className="bg-main/60" />
       <DialogContent
-        isOverlayVisible={false}
-        className="h-[80%] max-w-[860px] overflow-hidden border-none bg-main px-0 shadow-sm sm:rounded-xl md:rounded-3xl"
+        overlayClassName="bg-main/60 z-[60]"
+        className="z-[70] h-[80%] max-w-[860px] overflow-hidden border-none bg-main px-0 shadow-sm sm:rounded-xl md:rounded-3xl"
         closeClassName="right-6 top-6"
       >
         <div className="px-5">
