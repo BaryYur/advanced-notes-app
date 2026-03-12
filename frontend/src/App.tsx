@@ -11,6 +11,8 @@ import { AuthContext } from "@/context";
 
 import { pageRoutes } from "@/config";
 
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
 import { Toaster } from "react-hot-toast";
 
 export const App = () => {
@@ -58,6 +60,8 @@ export const App = () => {
           </Routes>
         </MainLayout>
       )}
+
+      <SpeedInsights />
     </>
   );
 };
