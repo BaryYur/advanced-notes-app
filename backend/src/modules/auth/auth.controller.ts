@@ -11,6 +11,7 @@ import {
 
 import { AuthService } from "./auth.service";
 import { SuccessResponseDto } from "../../common/dto/success.dto";
+import { AUTH_COOKIE_MAX_AGE_MS } from "../../common/constants";
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -37,7 +38,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: isProduction ? "none" : "lax",
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: AUTH_COOKIE_MAX_AGE_MS,
       path: "/",
     });
 
@@ -64,7 +65,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: isProduction ? "none" : "lax",
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: AUTH_COOKIE_MAX_AGE_MS,
       path: "/",
     });
 

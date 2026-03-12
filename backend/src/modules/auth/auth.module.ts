@@ -8,6 +8,8 @@ import { JwtStrategy } from "./jwt.strategy";
 import { UserService } from "../user/user.service";
 import { MailService } from "../mail/mail.service";
 
+import { AUTH_TOKEN_EXPIRES_IN } from "../../common/constants";
+
 @Module({
   imports: [
     ConfigModule,
@@ -20,7 +22,7 @@ import { MailService } from "../mail/mail.service";
           config.get("JWT_SECRET") ||
           "bdc38f57fe9a6388a0a195f43b6dd1c42e15d89bb781a1966e2bc016d26bba90",
         signOptions: {
-          expiresIn: config.get("JWT_EXPIRES_IN") || "1h",
+          expiresIn: config.get("JWT_EXPIRES_IN") || AUTH_TOKEN_EXPIRES_IN,
         },
       }),
     }),
