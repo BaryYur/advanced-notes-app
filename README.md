@@ -12,7 +12,7 @@ A modern, full-stack monorepo application for managing notes with real-time upda
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 This project is a monorepo managed with npm workspaces.
 
@@ -36,7 +36,7 @@ This project is a monorepo managed with npm workspaces.
 
 ---
 
-## ⚡ Tech Stack
+## Tech Stack
 
 ### Backend
 
@@ -67,7 +67,7 @@ We use **GitHub Flow** and **Husky** to maintain high code quality:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -101,7 +101,7 @@ npm run dev -w frontend
 
 ---
 
-## 📜 Available Scripts
+## Available Scripts
 
 | Script               | Description                                             |
 | :------------------- | :------------------------------------------------------ |
