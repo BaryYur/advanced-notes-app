@@ -55,7 +55,7 @@ This project is a monorepo managed with npm workspaces.
 
 ---
 
-## 🛠️ Development Workflow
+## Development Workflow
 
 We use **GitHub Flow** and **Husky** to maintain high code quality:
 
